@@ -35,4 +35,5 @@ yarn-error.log
 # ▼追加
 # MySQL データファイルを無視
 docker/mysql/data/*
+docker/mysql/data/
 # ▲追加
