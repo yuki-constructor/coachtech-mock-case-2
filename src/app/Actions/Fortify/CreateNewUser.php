@@ -3,10 +3,14 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use App\Models\Employee;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Http\Request;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -19,22 +23,37 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        Validator::make($input, [
+        $validated = Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
                 'string',
                 'email',
                 'max:255',
-                Rule::unique(User::class),
+                'unique:admins,email',
+                'unique:employees,email'
+                // Rule::unique(User::class),
             ],
-            'password' => $this->passwordRules(),
+            'password' =>  ['required', 'string', $this->passwordRules(), 'confirmed'],
         ])->validate();
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-        ]);
+        if (request()->is('admin/*')) {
+            return Admin::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
+        } else {
+            $employee = Employee::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
+
+            // メール認証メールを送信
+            $employee->sendEmailVerificationNotification();
+
+            return $employee;
+        }
     }
 }
