@@ -5,27 +5,31 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
-use App\Mail\CustomVerificationEmail;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRegisterRequest;
 
 class EmployeeController extends Controller
 {
-    // ===================================================
-    //  従業員ユーザーの認証関連
-    // ===================================================
+    /**
+     * ==============================
+     * 従業員ユーザーの認証関連
+     * ==============================
+     */
 
-    // ---- ユーザー登録関連
-
-    // 従業員ユーザーの登録画面表示
+    /**
+     * 従業員の登録画面を表示
+     *
+     * @return \Illuminate\View\View
+     */
     public function register()
     {
         return view('auth.employee.register');
     }
 
-    // 従業員ユーザーの登録・認証メール送信処理
+    /**
+     * 従業員の登録処理（認証メール送信処理も）
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(EmployeeRegisterRequest $request)
     {
         // ユーザー作成
@@ -46,7 +50,11 @@ class EmployeeController extends Controller
         return redirect()->route('email.authentication.invitation', ["employeeId" => $employee->id]);
     }
 
-    // メール認証処理
+    /**
+     * 従業員のメール認証処理
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function emailVerify(Request $request, $id, $hash)
     {
         $user = Employee::findOrFail($id);
@@ -62,7 +70,11 @@ class EmployeeController extends Controller
         return redirect()->route('employee.attendance.create', ["employeeId" => $user->id]);
     }
 
-    // メール認証誘導画面表示
+    /**
+     * 従業員のメール認証誘導画面表示
+     *
+     * @return \Illuminate\View\View
+     */
     public function invitation($employeeId)
     {
         $employee = Employee::findOrFail($employeeId);
@@ -70,7 +82,11 @@ class EmployeeController extends Controller
         return view('auth.employee.email-authentication-invitation', ['employee' => $employee]);
     }
 
-    // 認証メール再送処理
+    /**
+     * 従業員の認証メール再送処理
+     *
+     * @return \Illuminate\View\View
+     */
     public function resend($employeeId)
     {
         $employee = Employee::findOrFail($employeeId);
@@ -84,7 +100,11 @@ class EmployeeController extends Controller
         return view('auth.employee.email-authentication-invitation', ['employee' => $employee]);
     }
 
-    // 勤怠登録画面表示
+    /**
+     * 従業員の勤怠登録画面を表示
+     *
+     * @return \Illuminate\View\View
+     */
     public function attendanceCreate($employeeId)
     {
         $employee = Employee::findOrFail($employeeId);
@@ -93,14 +113,13 @@ class EmployeeController extends Controller
     }
 
 
-    // ---- ログイン関連
-
-    // 従業員ユーザーの登録画面表示
+    /**
+     * 従業員のログイン画面を表示
+     *
+     *  @return \Illuminate\View\View
+     */
     public function login()
     {
         return view('auth.employee.login');
     }
-
-
-
 }
