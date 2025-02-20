@@ -1,2 +1,5 @@
+# 他の無視対象はそのまま
 *
+# photos ディレクトリを追跡
+!photos/
 !.gitignore
