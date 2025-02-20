@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -28,9 +27,8 @@ class Employee extends Authenticatable implements MustVerifyEmail
     }
 
     // 認証メール送信処理
-       public function sendEmailVerificationNotification()
+    public function sendEmailVerificationNotification()
     {
         Mail::to($this->email)->send(new CustomVerificationEmail($this));
     }
 }
-

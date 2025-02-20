@@ -4,8 +4,6 @@ body {
     font-size: clamp(16px, 1.5vw, 23px);
     margin: 0;
     padding: 0;
-    width: 100%;
-    color: #000;
     background-color: rgb(246, 238, 238);
 }
 
@@ -50,27 +48,26 @@ body {
     margin: 5px;
 }
 
-.form-group {
-    margin-bottom: 15px;
+.mail-check-link {
+    margin-top: 50px;
 }
 
-.form-group__submit-btn {
-    /* width: 50%; */
-    /* width: fit-content; */
+.mail-check-link__btn {
     background-color: #c7c3c3;
     color: #000;
     font-size: clamp(18px, 1.65vw, 25px);
     font-weight: bold;
-    padding: 10px 20px;
-    /* border: none; */
+    padding: 15px 30px;
+    border:solid 1px #000 ;
     border-radius: 10px;
     cursor: pointer;
     margin-top: 50px;
     margin-bottom: 15px;
+    text-decoration: none;
 }
 
 .form-group__submit-btn:hover {
-    background-color: #464545;
+    background-color: #888787;
 }
 
 .send-mail-link {
@@ -79,7 +76,7 @@ body {
     margin-top: 15px;
 }
 
-.send-mail-link__link-btn {
+.send-mail-link__btn {
     font-size: clamp(14px, 1.3vw, 20px);
     color: #007bff;
     text-decoration: none;
@@ -87,7 +84,7 @@ body {
     background: transparent;
 }
 
-.send-mail-link__link-btn:hover {
+.send-mail-link__btn:hover {
     text-decoration: underline;
 }
 

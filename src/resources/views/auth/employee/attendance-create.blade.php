@@ -17,27 +17,22 @@
           <nav class="nav">
             <ul class="nav__ul">
               <li>
-                <form action="{{ route('logout') }}" method="POST">
-                  <!-- @csrf -->
-                  <button type="submit" class="nav__attendance">勤怠</button>
-                </form>
+                <a class="nav__attendance" href="">
+                    勤怠
+                </a>
               </li>
               <li>
-                <form action="" method="GET">
-                  <!-- @csrf -->
-                  <button type="submit" class="nav__attendance-list">
+                <a class="nav__attendance-list" href="">
                     勤怠一覧
-                  </button>
-                </form>
+                </a>
               </li>
               <li>
-                <form action="" method="GET">
-                  <!-- @csrf -->
-                  <button type="submit" class="nav__application">申請</button>
-                </form>
+                <a class="nav__application" href="">
+                    申請
+                </a>
               </li>
               <li>
-                <form action="{{ route('logout') }}" method="POST">
+                <form action="" method="POST">
                   <!-- @csrf -->
                   <button type="submit" class="nav__logout">ログアウト</button>
                 </form>

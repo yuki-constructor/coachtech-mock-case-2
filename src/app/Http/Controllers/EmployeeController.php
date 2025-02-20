@@ -39,14 +39,10 @@ class EmployeeController extends Controller
             'password' => Hash::make($request['password']),
         ]);
 
-        // 直接Mailableクラス指定
-        // Mail::to($employee->email)->send(new CustomVerificationEmail($employee));
-
         // Employeeモデル記載のメソッド使用
         $employee->sendEmailVerificationNotification();
 
         // メール認証誘導画面ヘリダイレクト
-        // return view('auth.employee.email-authentication-invitation', ['employee' => $employee]);
         return redirect()->route('email.authentication.invitation', ["employeeId" => $employee->id]);
     }
 
@@ -91,9 +87,6 @@ class EmployeeController extends Controller
     {
         $employee = Employee::findOrFail($employeeId);
 
-        // 直接Mailableクラス指定
-        // Mail::to($employee->email)->send(new CustomVerificationEmail($employee));
-
         // Employeeモデル記載のメソッド使用
         $employee->sendEmailVerificationNotification();
 
@@ -111,7 +104,6 @@ class EmployeeController extends Controller
 
         return view('auth.employee.attendance-create', ['employee' => $employee]);
     }
-
 
     /**
      * 従業員のログイン画面を表示

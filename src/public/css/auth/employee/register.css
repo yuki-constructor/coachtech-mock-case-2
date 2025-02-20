@@ -4,8 +4,6 @@ body {
     font-size: clamp(16px, 1.5vw, 23px);
     margin: 0;
     padding: 0;
-    width: 100%;
-    color: #000;
     background-color: rgb(246, 238, 238);
 }
 
