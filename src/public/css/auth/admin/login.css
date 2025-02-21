@@ -1,4 +1,13 @@
 /* メイン */
+.error-message {
+    color: #e65a5a;
+}
+
+.message p {
+    color: #e65a5a;
+    text-align: center;
+}
+
 .container-wrap {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -55,23 +64,6 @@
 
 .form-group__submit-btn:hover {
     background-color: #464545;
-}
-
-.login-link {
-    grid-column: 2/3;
-    grid-row: 1/2;
-    text-align: center;
-    margin-top: 15px;
-}
-
-.login-link__link-btn {
-    font-size: clamp(14px, 1.3vw, 20px);
-    color: #007bff;
-    text-decoration: none;
-}
-
-.login-link__link-btn:hover {
-    text-decoration: underline;
 }
 
 /* レスポンシブ対応 */
