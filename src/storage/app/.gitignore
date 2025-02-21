@@ -1,4 +1,7 @@
+# 他の無視対象はそのまま
 *
-!private/
+# public ディレクトリを追跡
 !public/
+# photos ディレクトリを追跡
+!public/photos/
 !.gitignore
