@@ -33,7 +33,8 @@
                             </a>
                         </li>
                         <li>
-                            <a class="nav__application-list">申請一覧
+                            <a class="nav__application-list">
+                                申請一覧
                             </a>
                         </li>
                         <li>

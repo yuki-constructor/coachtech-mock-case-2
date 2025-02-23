@@ -10,13 +10,11 @@
     <div class="container-wrap">
         <div class="container">
             <h1 class="title">管理者ログイン</h1>
-            {{-- ▼▼▼▼▼▼▼▼▼▼▼▼（メッセージ表示） --}}
             <div class="message">
                 @if (session()->has('error'))
                     <p>{{ session()->get('error') }}</p>
                 @endif
             </div>
-            {{-- ▲▲▲▲▲▲▲▲▲▲▲▲ --}}
             <form class="form" method="POST" action="{{ route('admin.authenticate') }}">
                 @csrf
                 <div class="form-group">

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Employee;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\EmployeeRegisterRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+
 
 class EmployeeController extends Controller
 {
@@ -107,7 +108,7 @@ class EmployeeController extends Controller
     /**
      * 従業員の勤怠登録画面を表示
      *
-     *  @route GET /employee/attendance-create/{employeeId}
+     * @route GET /employee/attendance-create/{employeeId}
      * @param int $employeeId
      * @return \Illuminate\View\View
      */
