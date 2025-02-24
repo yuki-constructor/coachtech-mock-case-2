@@ -14,6 +14,11 @@
     margin-top: 20vh;
 }
 
+.error-message {
+    font-weight: bold;
+    color: #f00c0c;
+}
+
 .message {
     font-weight: bold;
     margin: 5px;
@@ -37,7 +42,7 @@
     text-decoration: none;
 }
 
-.form-group__submit-btn:hover {
+.mail-check-link__btn:hover {
     background-color: #888787;
 }
 
