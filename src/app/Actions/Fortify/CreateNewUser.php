@@ -3,10 +3,10 @@
 namespace App\Actions\Fortify;
 
 use App\Models\Admin;
-use Laravel\Fortify\Contracts\CreatesNewUsers;
 use App\Models\Employee;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Laravel\Fortify\Contracts\CreatesNewUsers;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 

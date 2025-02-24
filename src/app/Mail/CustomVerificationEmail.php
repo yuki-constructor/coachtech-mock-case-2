@@ -2,11 +2,11 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Content;
 use App\Models\Employee;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailable;
-use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 
 
