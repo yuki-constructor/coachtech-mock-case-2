@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Employee;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\EmployeeRegisterRequest;
+use App\Models\Employee;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
 
 class EmployeeController extends Controller
 {
@@ -18,6 +19,7 @@ class EmployeeController extends Controller
     /**
      * 従業員の登録画面を表示
      *
+     * @route GET /employee/register
      * @return \Illuminate\View\View
      */
     public function register()
@@ -28,6 +30,8 @@ class EmployeeController extends Controller
     /**
      * 従業員の登録処理（認証メール送信処理も）
      *
+     * @route POST /employee/register
+     * @param EmployeeRegisterRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(EmployeeRegisterRequest $request)
@@ -49,6 +53,10 @@ class EmployeeController extends Controller
     /**
      * 従業員のメール認証処理
      *
+     * @route GET /email/verify/{id}/{hash}
+     * @param Request $request
+     * @param int $id
+     * @param string $hash
      * @return \Illuminate\Http\RedirectResponse
      */
     public function emailVerify(Request $request, $id, $hash)
@@ -69,6 +77,8 @@ class EmployeeController extends Controller
     /**
      * 従業員のメール認証誘導画面表示
      *
+     * @route GET /email-authentication-invitation/{employeeId}
+     * @param int $employeeId
      * @return \Illuminate\View\View
      */
     public function invitation($employeeId)
@@ -81,6 +91,8 @@ class EmployeeController extends Controller
     /**
      * 従業員の認証メール再送処理
      *
+     * @route POST /email/verification-notification/{employeeId}
+     * @param int $employeeId
      * @return \Illuminate\View\View
      */
     public function resend($employeeId)
@@ -96,6 +108,8 @@ class EmployeeController extends Controller
     /**
      * 従業員の勤怠登録画面を表示
      *
+     * @route GET /employee/attendance-create/{employeeId}
+     * @param int $employeeId
      * @return \Illuminate\View\View
      */
     public function attendanceCreate($employeeId)
