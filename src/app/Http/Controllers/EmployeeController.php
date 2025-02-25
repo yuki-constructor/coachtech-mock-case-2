@@ -179,18 +179,4 @@ class EmployeeController extends Controller
 
         return redirect()->route('employee.login');
     }
-
-    /**
-     * 従業員の勤怠登録画面を表示
-     *
-     * @route GET /employee/attendance-create/{employeeId}
-     * @param int $employeeId
-     * @return \Illuminate\View\View
-     */
-    public function attendanceCreate()
-    {
-        $employee = auth('employee')->user();
-
-        return view('auth.employee.attendance-create', ['employee' => $employee]);
-    }
 }

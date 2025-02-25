@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\AttendanceController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -52,12 +53,49 @@ Route::prefix('employee')->group(function () {
      */
     Route::post('/email/verification-notification/{employeeId}', [EmployeeController::class, 'resend'])
         ->name('verification.resend');
+});
 
-    /**
-     *  従業員の勤怠登録画面を表示（認証必須）
-     */
-    Route::get('/attendance-create', [EmployeeController::class, 'attendanceCreate'])
-        ->name('employee.attendance.create');
+/**
+ * ==============================
+ * 従業員ユーザーの勤怠登録関連
+ * ==============================
+ */
+Route::prefix('employee')->group(function () {
+
+    Route::middleware('auth:employee')->group(function () {
+
+        /**
+         *  従業員の勤怠登録画面を表示（認証必須）
+         */
+        Route::get('/attendance-create', [AttendanceController::class, 'attendanceCreate'])
+            ->name('employee.attendance.create');
+
+        /**
+         *  従業員の勤怠登録（メッセージ）画面を表示（認証必須）
+         */
+        Route::get('/attendance-message', [AttendanceController::class, 'attendanceMessage'])
+            ->name('employee.attendance.message');
+
+        /**
+         *  従業員の出勤登録処理（認証必須）
+         */
+        Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('attendance.clock-in');
+
+        /**
+         *  従業員の休憩開始登録処理（認証必須）
+         */
+        Route::post('/attendance/break-start', [AttendanceController::class, 'breakStart'])->name('attendance.break-start');
+
+        /**
+         *  従業員の休憩終了登録処理（認証必須）
+         */
+        Route::post('/attendance/break-end', [AttendanceController::class, 'breakEnd'])->name('attendance.break-end');
+
+        /**
+         *  従業員の退勤登録処理（認証必須）
+         */
+        Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('attendance.clock-out');
+    });
 });
 
 /**

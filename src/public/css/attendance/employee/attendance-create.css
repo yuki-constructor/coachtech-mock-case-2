@@ -1,0 +1,110 @@
+/* メイン */
+.container-wrap {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-auto-flow: column;
+}
+
+.container {
+    grid-column: 2/3;
+    grid-row: 1/2;
+    min-height: 100vh;
+    width: 100%;
+    text-align: center;
+    margin-top: 20vh;
+}
+
+.work-status {
+    color: #737272;
+    font-size: clamp(16px, 1.5vw, 23px);
+    font-weight: bold;
+    background-color: #c1bfbf;
+    border: none;
+    border-radius: 100vh;
+    width: fit-content;
+    margin: 10px auto;
+    padding: 5px 20px;
+}
+
+@font-face {
+    font-family: number;
+    src: local("Hiragino Mincho ProN");
+    unicode-range: U+0030-0039;
+}
+
+.date {
+    font-size: clamp(25px, 2.3vw, 35px);
+    margin: 20px;
+}
+
+.time {
+    font-family: number;
+    font-size: clamp(45px, 4vw, 80px);
+    font-weight: bold;
+    margin: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group__submit-btn--container {
+    display: flex;
+    justify-content: center;
+}
+
+.form-group__submit-btn {
+    width: 8em;
+    background-color: #000;
+    color: #fbfbfb;
+    font-size: clamp(18px, 1.65vw, 25px);
+    font-weight: bold;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    padding: 10px;
+    border-radius: 18px;
+    cursor: pointer;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    margin: 50px 15px 15px 15px;
+}
+
+.form-group__submit-btn:hover {
+    background-color: #464545;
+}
+
+.form-group__submit-btn--white {
+    width: 8em;
+    background-color: #fbfbfb;
+    color: #000;
+    font-size: clamp(18px, 1.65vw, 25px);
+    font-weight: bold;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    padding: 10px;
+    border-radius: 18px;
+    border-color: #fbfbfb;
+    cursor: pointer;
+    margin: 50px 15px 15px 15px;
+}
+
+.form-group__submit-btn--white:hover {
+    background-color: #b8b6b6;
+}
+
+.message {
+    margin-top: 50px;
+    letter-spacing: 0.15em;
+    text-indent: 0.15em;
+    font-weight: bold;
+}
+
+/* レスポンシブ対応 */
+
+/* タブレット: 768px～850px */
+@media (max-width: 850px) and (min-width: 768px) {
+    /* メイン */
+    .container-wrap {
+        grid-template-columns: 0.5fr 2fr 0.5fr;
+    }
+}
