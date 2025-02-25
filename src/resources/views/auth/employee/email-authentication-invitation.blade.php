@@ -11,8 +11,8 @@
         <div class="container">
             {{-- エラーメッセージ --}}
             @if (session('error'))
-            <p class="error-message">{{ session('error') }}</p>
-        @endif
+                <p class="error-message">{{ session('error') }}</p>
+            @endif
             <p class="message">登録していただいたメールアドレスに認証メールを送付しました。</p>
             <p class="message">メール認証を完了してください。</p>
             <div class="mail-check-link">

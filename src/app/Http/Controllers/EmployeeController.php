@@ -136,30 +136,31 @@ class EmployeeController extends Controller
 
         // 認証処理
         if (Auth::guard('employee')->attempt($credentials)) {
-            $loginRequest->session()->regenerate();
 
-            $employee = Auth::guard('employee')->user();
+            // 早期リターン
+            return to_route('employee.login')->with(['error' => 'ログイン情報が登録されていません。']);
+        }
+        $loginRequest->session()->regenerate();
 
-            // メール認証未完了の場合
-            if (!$employee->email_verified_at) {
+        $employee = Auth::guard('employee')->user();
 
-                // ログアウト
-                Auth::guard('employee')->logout();
+        // メール認証未完了の場合
+        if (!$employee->email_verified_at) {
 
-                // 認証メール送信（Employeeモデル記載のメソッド使用）
-                $employee->sendEmailVerificationNotification();
+            // ログアウト
+            Auth::guard('employee')->logout();
 
-                // メール認証誘導画面へリダイレクト
-                return redirect()->route('email.authentication.invitation', ['employeeId' => $employee->id])
-                    ->with(['error' => 'メール認証が未完了です。メール認証を完了してください。']);
-            }
+            // 認証メール送信（Employeeモデル記載のメソッド使用）
+            $employee->sendEmailVerificationNotification();
 
-            // メール認証完了の場合
-            // 勤怠登録画（従業員）へリダイレクト
-            return redirect()->route('employee.attendance.create');
+            // メール認証誘導画面へリダイレクト
+            return redirect()->route('email.authentication.invitation', ['employeeId' => $employee->id])
+                ->with(['error' => 'メール認証が未完了です。メール認証を完了してください。']);
         }
 
-        return to_route('employee.login')->with(['error' => 'ログイン情報が登録されていません。']);
+        // メール認証完了の場合
+        // 勤怠登録画（従業員）へリダイレクト
+        return redirect()->route('employee.attendance.create');
     }
 
     /**
