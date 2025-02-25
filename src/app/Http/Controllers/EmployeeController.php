@@ -135,7 +135,7 @@ class EmployeeController extends Controller
         $credentials = $loginRequest->only('email', 'password');
 
         // 認証処理
-        if (Auth::guard('employee')->attempt($credentials)) {
+        if (!Auth::guard('employee')->attempt($credentials)) {
 
             // 早期リターン
             return to_route('employee.login')->with(['error' => 'ログイン情報が登録されていません。']);
