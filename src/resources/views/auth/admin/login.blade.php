@@ -10,6 +10,7 @@
     <div class="container-wrap">
         <div class="container">
             <h1 class="title">管理者ログイン</h1>
+            {{-- メッセージ --}}
             <div class="message">
                 @if (session()->has('error'))
                     <p>{{ session()->get('error') }}</p>
@@ -33,7 +34,6 @@
                     </div>
                     <input class="form-group__input" type="text" id="email" name="email" />
                 </div>
-
                 <div class="form-group">
                     <label class="form-group__label" for="password">パスワード</label>
                     <div>

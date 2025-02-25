@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EmployeeRegisterRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -43,7 +45,7 @@ class EmployeeController extends Controller
             'password' => Hash::make($request['password']),
         ]);
 
-        // Employeeモデル記載のメソッド使用
+        // 認証メール送信（Employeeモデル記載のメソッド使用）
         $employee->sendEmailVerificationNotification();
 
         // メール認証誘導画面ヘリダイレクト
@@ -71,7 +73,11 @@ class EmployeeController extends Controller
             $user->markEmailAsVerified();
         }
 
-        return redirect()->route('employee.attendance.create', ["employeeId" => $user->id]);
+        // 認証後、自動でログイン
+        Auth::guard('employee')->login($user);
+
+        // 勤怠登録画（従業員）へリダイレクト
+        return redirect()->route('employee.attendance.create');
     }
 
     /**
@@ -99,10 +105,79 @@ class EmployeeController extends Controller
     {
         $employee = Employee::findOrFail($employeeId);
 
-        // Employeeモデル記載のメソッド使用
+        // 認証メール送信（Employeeモデル記載のメソッド使用）
         $employee->sendEmailVerificationNotification();
 
         return view('auth.employee.email-authentication-invitation', ['employee' => $employee]);
+    }
+
+    /**
+     * 従業員のログイン画面を表示
+     *
+     * @route GET /employee/login
+     * @return \Illuminate\View\View
+     */
+    public function login()
+    {
+        return view('auth.employee.login');
+    }
+
+    /**
+     * 従業員のログイン認証処理
+     *
+     * @route POST /employee/login
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function authenticate(LoginRequest $loginRequest)
+    {
+        // 認証情報を取得
+        $credentials = $loginRequest->only('email', 'password');
+
+        // 認証処理
+        if (!Auth::guard('employee')->attempt($credentials)) {
+
+            // 早期リターン
+            return to_route('employee.login')->with(['error' => 'ログイン情報が登録されていません。']);
+        }
+        $loginRequest->session()->regenerate();
+
+        $employee = Auth::guard('employee')->user();
+
+        // メール認証未完了の場合
+        if (!$employee->email_verified_at) {
+
+            // ログアウト
+            Auth::guard('employee')->logout();
+
+            // 認証メール送信（Employeeモデル記載のメソッド使用）
+            $employee->sendEmailVerificationNotification();
+
+            // メール認証誘導画面へリダイレクト
+            return redirect()->route('email.authentication.invitation', ['employeeId' => $employee->id])
+                ->with(['error' => 'メール認証が未完了です。メール認証を完了してください。']);
+        }
+
+        // メール認証完了の場合
+        // 勤怠登録画（従業員）へリダイレクト
+        return redirect()->route('employee.attendance.create');
+    }
+
+    /**
+     * 従業員のログアウト処理
+     *
+     * @route POST /employee/logout
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout(Request $request)
+    {
+        Auth::guard('employee')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('employee.login');
     }
 
     /**
@@ -112,20 +187,10 @@ class EmployeeController extends Controller
      * @param int $employeeId
      * @return \Illuminate\View\View
      */
-    public function attendanceCreate($employeeId)
+    public function attendanceCreate()
     {
-        $employee = Employee::findOrFail($employeeId);
+        $employee = auth('employee')->user();
 
         return view('auth.employee.attendance-create', ['employee' => $employee]);
-    }
-
-    /**
-     * 従業員のログイン画面を表示
-     *
-     *  @return \Illuminate\View\View
-     */
-    public function login()
-    {
-        return view('auth.employee.login');
     }
 }

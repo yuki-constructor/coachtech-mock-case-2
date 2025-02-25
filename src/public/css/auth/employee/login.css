@@ -1,4 +1,13 @@
 /* メイン */
+.error-message {
+    color: #e65a5a;
+}
+
+.message p {
+    color: #e65a5a;
+    text-align: center;
+}
+
 .container-wrap {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;

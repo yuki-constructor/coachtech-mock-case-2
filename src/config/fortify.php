@@ -147,5 +147,4 @@ return [
         Features::registration(),
         Features::emailVerification(),
     ],
-
 ];
