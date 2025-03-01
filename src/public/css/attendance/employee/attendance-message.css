@@ -39,47 +39,16 @@
 
 .time {
     font-family: number;
-    font-size: clamp(35px, 3.2vw, 70px);
+    font-size: clamp(45px, 4vw, 80px);
     font-weight: bold;
     margin: 10px;
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group__submit-btn {
-    background-color: #000;
-    color: #fbfbfb;
-    font-size: clamp(18px, 1.65vw, 25px);
-    font-weight: bold;
-    letter-spacing: 0.42em;
-    text-indent: 0.42em;
-    padding: 10px 50px;
-    border-radius: 18px;
-    cursor: pointer;
+.message {
     margin-top: 50px;
-    margin-bottom: 15px;
-}
-
-.form-group__submit-btn:hover {
-    background-color: #464545;
-}
-
-.send-mail-link {
-    grid-column: 2/3;
-    grid-row: 1/2;
-    margin-top: 15px;
-}
-
-.send-mail-link__link-btn {
-    font-size: clamp(14px, 1.3vw, 20px);
-    color: #007bff;
-    text-decoration: none;
-}
-
-.send-mail-link__link-btn:hover {
-    text-decoration: underline;
+    letter-spacing: 0.15em;
+    text-indent: 0.15em;
+    font-weight: bold;
 }
 
 /* レスポンシブ対応 */
