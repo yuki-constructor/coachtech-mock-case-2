@@ -71,7 +71,7 @@ class AttendanceController extends Controller
 
         $today = Carbon::today()->toDateString();
 
-        //AttendanceStatusモデルでステータスを定数化。attendance_statusesテーブルから「勤務外」のレコードを取得
+        //AttendanceStatusモデルでステータスを定数化。attendance_statusesテーブルから「勤務中」のレコードを取得
         $status = AttendanceStatus::where('status', AttendanceStatus::STATUS_ON)->first();
 
         // 出勤テーブルにレコード作成（「勤務中」ステータスを付与）
