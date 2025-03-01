@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
 {
@@ -13,7 +12,7 @@ class Attendance extends Model
     protected $fillable = ['employee_id', 'date', 'start_time', 'end_time', 'attendance_status_id'];
 
     // Attendanceは１対多の関係でEmployeeと関連（従業員の勤怠情報）
-    public function attendance()
+    public function employee()
     {
         return $this->belongsTo(Employee::class);
     }

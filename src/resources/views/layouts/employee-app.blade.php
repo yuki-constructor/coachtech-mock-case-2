@@ -23,12 +23,12 @@
                 <nav class="nav">
                     <ul class="nav__ul">
                         <li>
-                            <a class="nav__attendance" href="">
+                            <a class="nav__attendance" href="{{ route('employee.attendance.create') }}">
                                 勤怠
                             </a>
                         </li>
                         <li>
-                            <a class="nav__attendance-list" href="">
+                            <a class="nav__attendance-list" href="{{ route('employee.attendance.list') }}">
                                 勤怠一覧
                             </a>
                         </li>
