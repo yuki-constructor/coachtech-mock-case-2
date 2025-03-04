@@ -1,4 +1,4 @@
-@extends('layouts.employee-app-1-4-1')
+@extends('layouts.employee-app')
 
 @section('title', '勤怠一覧画面（従業員）')
 

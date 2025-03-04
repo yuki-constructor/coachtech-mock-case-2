@@ -1,4 +1,4 @@
-@extends('layouts.employee-app-1-2-1')
+@extends('layouts.employee-app')
 
 @section('title', '勤怠登録登録画面（一般ユーザー）')
 

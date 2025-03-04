@@ -1,4 +1,28 @@
 /* メイン */
+/* .container-wrap {
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-auto-flow: column;
+}
+
+.container {
+    grid-column: 2/3;
+    grid-row: 1/2;
+    min-height: 100vh;
+    width: 100%;
+    text-align: center;
+}
+
+@font-face {
+    font-family: number;
+    src: local("Hiragino Mincho ProN");
+    unicode-range: U+0030-0039;
+} */
+
+.container {
+    text-align: center;
+}
+
 h1 {
     font-size: clamp(25px, 2.3vw, 35px);
     border-left: 10px solid #000000;

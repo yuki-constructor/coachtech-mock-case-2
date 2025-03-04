@@ -1,4 +1,4 @@
-@extends('layouts.common-1-2-1')
+@extends('layouts.common')
 
 @section('title', '会員登録')
 
