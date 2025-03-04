@@ -8,19 +8,6 @@
     text-align: center;
 }
 
-.container-wrap {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-auto-flow: column;
-}
-
-.container {
-    grid-column: 2/3;
-    grid-row: 1/2;
-    min-height: 100vh;
-    width: 100%;
-}
-
 .title {
     font-size: clamp(25px, 2.3vw, 35px);
     text-align: center;

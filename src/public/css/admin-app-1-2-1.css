@@ -1,0 +1,21 @@
+@import url("/css/common-1-2-1.css");
+
+.nav__attendance-list,
+.nav__staff-list,
+.nav__application-list {
+    text-decoration: none;
+    padding: 5px 15px;
+    font-size: clamp(18px, 1.65vw, 25px);
+    font-size: inherit;
+    color: #fff;
+    background-color: #000;
+    border: none;
+    cursor: pointer;
+    display: block;
+}
+
+.nav__attendance-list:hover,
+.nav__staff-list:hover,
+.nav__application-list:hover {
+    opacity: 0.6;
+}

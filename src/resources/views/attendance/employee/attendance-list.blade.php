@@ -1,4 +1,4 @@
-@extends('layouts.employee-app')
+@extends('layouts.employee-app-1-4-1')
 
 @section('title', '勤怠一覧画面（従業員）')
 
@@ -34,41 +34,23 @@
                 </div>
                 @foreach ($attendances as $attendance)
                     <div class="table-row">
+
+                        {{-- 日付 --}}
                         <span>{{ \Carbon\Carbon::parse($attendance->date)->locale('ja')->isoFormat('MM/DD (ddd)') }}</span>
+
+                        {{-- 出勤時刻 --}}
                         <span>{{ $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '-' }}</span>
+
+                        {{-- 退勤時刻 --}}
                         <span>{{ $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '-' }}</span>
-                        <!-- 休憩時間の合計を計算 -->
-                        <span>
-                            @php
-                                $totalBreakMinutes = $attendance->breaks->sum(function ($break) {
-                                    if ($break->break_end_time) {
-                                        return \Carbon\Carbon::parse($break->break_start_time)->diffInMinutes(
-                                            \Carbon\Carbon::parse($break->break_end_time),
-                                        );
-                                    }
-                                    return 0;
-                                });
-                                echo floor($totalBreakMinutes / 60) .
-                                    ':' .
-                                    str_pad($totalBreakMinutes % 60, 2, '0', STR_PAD_LEFT);
-                            @endphp
-                        </span>
-                        <!-- 勤務時間の合計を計算 -->
-                        <span>
-                            @if ($attendance->start_time && $attendance->end_time)
-                                @php
-                                    $workMinutes =
-                                        \Carbon\Carbon::parse($attendance->start_time)->diffInMinutes(
-                                            $attendance->end_time,
-                                        ) - $totalBreakMinutes;
-                                    echo floor($workMinutes / 60) .
-                                        ':' .
-                                        str_pad($workMinutes % 60, 2, '0', STR_PAD_LEFT);
-                                @endphp
-                            @else
-                                -
-                            @endif
-                        </span>
+
+                        {{-- 休憩時間の合計 --}}
+                        <span>{{ $attendance->total_break_time }}</span>
+
+                        {{-- 勤務時間の合計 --}}
+                        <span>{{ $attendance->work_time }}</span>
+
+                        {{-- 詳細画面へのリンク --}}
                         <a href="{{ route('employee.attendance.show', ['attendanceId' => $attendance->id]) }}">詳細</a>
                     </div>
                 @endforeach

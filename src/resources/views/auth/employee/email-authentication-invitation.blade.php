@@ -1,4 +1,4 @@
-@extends('layouts.common')
+@extends('layouts.common-1-2-1')
 
 @section('title', 'メール認証誘導')
 
