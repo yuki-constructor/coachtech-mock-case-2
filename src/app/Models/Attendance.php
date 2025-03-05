@@ -28,4 +28,10 @@ class Attendance extends Model
     {
         return $this->hasMany(BreakModel::class);
     }
+
+    // Attendanceは１対多の関係でAttendanceRequestと関連（修正申請は何度でもできる）
+    public function attendanceRequests()
+    {
+        return $this->hasMany(BreakModel::class);
+    }
 }

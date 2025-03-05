@@ -10,15 +10,17 @@
     <div class="container-wrap">
         <div class="container">
             <h1>勤怠詳細</h1>
-            <form action="" method="POST">
+            <form action="{{ route('employee.attendance.request', ['attendanceId' => $attendance->id]) }}" method="POST">
                 @csrf
                 <div class="attendance-table">
+
                     {{-- 名前 --}}
                     <div class="table-row">
                         <span class="label">名前</span>
                         <span class="value">{{ auth('employee')->user()->name }}</span>
                         <span class="error-message"></span>
                     </div>
+
                     {{-- 日付 --}}
                     <div class="table-row">
                         <span class="label">日付</span>
@@ -28,6 +30,7 @@
                         </div>
                         <span class="error-message"></span>
                     </div>
+
                     {{-- 出勤・退勤 --}}
                     <div class="table-row">
                         <span class="label">出勤・退勤</span>
@@ -37,6 +40,7 @@
                             <input class="time-box" type="time" name="end_time"
                                 value="{{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}" />
                         </div>
+
                         {{-- エラーメッセージ --}}
                         <span class="error-message">
                             @if ($errors->has('start_time') || $errors->has('end_time'))
@@ -46,6 +50,7 @@
                             @endif
                         </span>
                     </div>
+
                     {{-- 休憩時間 --}}
                     @foreach ($attendance->breaks as $break)
                         <div class="table-row">
@@ -69,6 +74,7 @@
                             </span>
                         </div>
                     @endforeach
+
                     {{-- 備考 --}}
                     <div class="table-row">
                         <span class="label">備考</span>
