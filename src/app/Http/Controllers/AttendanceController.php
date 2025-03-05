@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\AttendanceStatus;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 /**
  * ==============================
@@ -78,7 +79,7 @@ class AttendanceController extends Controller
         Attendance::create([
             'employee_id' => $employee->id,
             'date' => $today,
-            'start_time' => Carbon::now()->toTimeString(),
+            'start_time' => Carbon::now()->toDateTimeString(), // 日付と時間を含める
             'attendance_status_id' => $status->id,
         ]);
 
@@ -99,7 +100,7 @@ class AttendanceController extends Controller
 
         // 休憩テーブルにレコード作成
         $attendance->breaks()->create([
-            'break_start_time' => Carbon::now()->toTimeString(),
+            'break_start_time' => Carbon::now()->toDateTimeString(), // 日付と時間を含める
         ]);
 
         // AttendanceStatusモデルでステータスを定数化。attendance_statusesテーブルから「休憩中」のレコードを取得
@@ -127,7 +128,7 @@ class AttendanceController extends Controller
         // 休憩テーブルから、休憩戻りの登録がされていないレコードを取得し、休憩戻り時間を登録
         $lastBreak = $attendance->breaks()->whereNull('break_end_time')->latest()->first();
 
-        $lastBreak->update(['break_end_time' => Carbon::now()->toTimeString()]);
+        $lastBreak->update(['break_end_time' => Carbon::now()->toDateTimeString()]); // 日付と時間を含める
 
         // AttendanceStatusモデルでステータスを定数化。attendance_statusesテーブルから「勤務中」のレコードを取得
         $status = AttendanceStatus::where('status', AttendanceStatus::STATUS_ON)->first();
@@ -156,10 +157,77 @@ class AttendanceController extends Controller
 
         // 勤怠テーブルのステータスを「勤務外」に更新
         $attendance->update([
-            'end_time' => Carbon::now()->toTimeString(),
+            'end_time' => Carbon::now()->toDateTimeString(), // 日付と時間を含める
             'attendance_status_id'  => $status->id,
         ]);
 
         return to_route('employee.attendance.message')->with(['message' => 'お疲れ様でした。']);
+    }
+
+    /**
+     * 従業員の勤怠一覧画面を表示
+     *
+     * @route GET /employee/attendance-list
+     * @return \Illuminate\View\View
+     */
+    public function attendanceList(Request $request)
+    {
+        // ログイン中の従業員情報を取得
+        $employee = auth('employee')->user();
+
+        // 指定された月を取得（デフォルトは現在の月）
+        $month = $request->query('month', now()->format('Y-m'));
+
+        // 指定月の勤怠データを取得
+        $attendances = Attendance::where('employee_id', $employee->id)
+            ->where('date', 'like', $month . '%')
+            ->orderBy('date', 'asc')
+            ->with('breaks') // 休憩データも取得
+            ->get();
+
+        foreach ($attendances as $attendance) {
+
+            // 休憩時間の合計を計算（分単位）
+            $totalBreakMinutes = $attendance->breaks->sum(function ($break) {
+                if ($break->break_end_time) {
+                    return \Carbon\Carbon::parse($break->break_start_time)->diffInMinutes(
+                        \Carbon\Carbon::parse($break->break_end_time)
+                    );
+                }
+                return 0;
+            });
+
+            // 勤務時間の計算（出勤時間があり、退勤時間もある場合のみ）
+            $workMinutes = 0;
+            if ($attendance->start_time && $attendance->end_time) {
+                $workMinutes = \Carbon\Carbon::parse($attendance->start_time)->diffInMinutes(
+                    \Carbon\Carbon::parse($attendance->end_time)
+                ) - $totalBreakMinutes;
+            }
+
+            // 休憩時間 & 勤務時間をフォーマットして追加
+            $attendance->total_break_time = floor($totalBreakMinutes / 60) . ':' . str_pad($totalBreakMinutes % 60, 2, '0', STR_PAD_LEFT);
+            $attendance->work_time = $workMinutes > 0 ? (floor($workMinutes / 60) . ':' . str_pad($workMinutes % 60, 2, '0', STR_PAD_LEFT)) : '-';
+        }
+
+        return view('attendance.employee.attendance-list', compact('attendances', 'month'));
+    }
+
+    /**
+     * 従業員の勤怠詳細画面を表示
+     *
+     * @route GET /employee/attendance-show
+     * @return \Illuminate\View\View
+     */
+    public function attendanceShow($attendanceId)
+    {
+        // ログイン中の従業員情報を取得
+        $employee = auth('employee')->user();
+
+        // 該当の勤怠データを取得
+        $attendance = Attendance::with('breaks')
+            ->findOrFail($attendanceId);
+
+        return view('attendance.employee.attendance-show', compact('attendance'));
     }
 }

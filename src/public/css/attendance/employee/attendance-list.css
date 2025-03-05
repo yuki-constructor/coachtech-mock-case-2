@@ -1,22 +1,6 @@
 /* メイン */
-.container-wrap {
-    display: grid;
-    grid-template-columns: 1fr 4fr 1fr;
-    grid-auto-flow: column;
-}
-
 .container {
-    grid-column: 2/3;
-    grid-row: 1/2;
-    min-height: 100vh;
-    width: 100%;
     text-align: center;
-}
-
-@font-face {
-    font-family: number;
-    src: local("Hiragino Mincho ProN");
-    unicode-range: U+0030-0039;
 }
 
 h1 {
@@ -39,7 +23,7 @@ h1 {
     padding: 10px;
 }
 
-.month-navigation button {
+.month-navigation a {
     font-size: clamp(14px, 1.25vw, 19px);
     padding: 5px 20px;
     border: none;
@@ -85,7 +69,8 @@ h1 {
 }
 
 .table-header span,
-.table-row span {
+.table-row span,
+.table-row a {
     padding: 10px;
     border-bottom: 1px solid #ccc;
     text-align: center;
@@ -94,12 +79,14 @@ h1 {
 }
 
 .table-row a {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-    text-align: center;
     color: #000;
-    font-family: number;
+    text-decoration: none;
     font-weight: bold;
+}
+
+.table-row a:hover {
+    color: blue;
+    text-decoration: underline;
 }
 
 /* レスポンシブ対応 */
