@@ -9,7 +9,7 @@
 @section('content')
     <div class="container-wrap">
         <div class="container">
-            <h1>申請一覧</h1>
+            <h1 class="title">申請一覧</h1>
             {{-- メニューバー --}}
             <div class="menu">
                 <div class="menu__link">
@@ -27,16 +27,6 @@
                     <span>申請日時</span>
                     <span>詳細</span>
                 </div>
-
-                <!-- 勤怠データを繰り返し -->
-                {{-- <div class="table-row">
-                    <span>承認待ち</span>
-                    <span>西玲奈</span>
-                    <span>2023/06/01</span>
-                    <span>遅延のため</span>
-                    <span>2023/06/02</span>
-                    <a href="#">詳細</a>
-                </div> --}}
 
                 @foreach ($attendanceRequests as $request)
                     <div class="table-row">

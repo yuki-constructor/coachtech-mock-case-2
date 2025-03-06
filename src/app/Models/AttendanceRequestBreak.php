@@ -13,7 +13,9 @@ class AttendanceRequestBreak extends Model
         'break_end_time' => 'datetime',
     ];
 
-    // AttendanceRequestBreakは１対多の関係でAttendanceRequestと関連（一つの attendance_requestsテーブルのidに紐づくattendance_request_breaksテーブルのレコードが複数存在する場合がある）
+    /**
+     *  AttendanceRequestBreakは１対多の関係でAttendanceRequestと関連（一つの attendance_requestsテーブルのidに紐づくattendance_request_breaksテーブルのレコードが複数存在する場合がある）
+     */
     public function attendanceRequest()
     {
         return $this->belongsTo(AttendanceRequest::class);

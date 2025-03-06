@@ -7,6 +7,7 @@ use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Models\AttendanceRequestBreak;
 use App\Models\AttendanceRequestStatus;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class AttendanceRequestController extends Controller
@@ -24,12 +25,8 @@ class AttendanceRequestController extends Controller
      */
     public function attendanceRequest(AttendanceRequestRequest $request, $attendanceId)
     {
-        $employee = auth('employee')->user();
-
         // 勤怠データ取得（認証ユーザーに紐づいているかチェック）
-        $attendance = Attendance::where('id', $attendanceId)
-            ->where('employee_id', $employee->id)
-            ->firstOrFail();
+        $attendance = Attendance::findOrFail($attendanceId);
 
         // AttendanceRequestStatusモデルでステータスを定数化。attendance_request_statusesテーブルから「承認待ち」のレコードを取得
         $pendingStatus = AttendanceRequestStatus::where('request_status', AttendanceRequestStatus::STATUS_PENDING_APPROVAL)->first();
@@ -37,8 +34,8 @@ class AttendanceRequestController extends Controller
         // リクエストの日時を `Y-m-d H:i:s` に変換
         $date = $attendance->date; // 勤怠の日付を取得
 
-        $startDateTime = \Carbon\Carbon::parse("{$date} {$request->start_time}");
-        $endDateTime = \Carbon\Carbon::parse("{$date} {$request->end_time}");
+        $startDateTime = Carbon::parse("{$date} {$request->start_time}");
+        $endDateTime = Carbon::parse("{$date} {$request->end_time}");
 
         // 勤怠修正申請を登録
         $attendanceRequest = AttendanceRequest::create([
@@ -51,8 +48,8 @@ class AttendanceRequestController extends Controller
 
         // 休憩修正申請の登録
         foreach ($request->breaks as $breakId => $break) {
-            $breakStartDateTime = \Carbon\Carbon::parse("{$date} {$break['start']}");
-            $breakEndDateTime = \Carbon\Carbon::parse("{$date} {$break['end']}");
+            $breakStartDateTime = Carbon::parse("{$date} {$break['start']}");
+            $breakEndDateTime = Carbon::parse("{$date} {$break['end']}");
 
             AttendanceRequestBreak::create([
                 'attendance_request_id' => $attendanceRequest->id,

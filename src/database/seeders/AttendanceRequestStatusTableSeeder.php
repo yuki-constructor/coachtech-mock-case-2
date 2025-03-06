@@ -12,7 +12,7 @@ class AttendanceRequestStatusTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $statuses = ['承認待ち', '承認済み'];
+        $statuses = [AttendanceRequestStatus::STATUS_APPROVED, AttendanceRequestStatus::STATUS_PENDING_APPROVAL];
 
         foreach ($statuses as $status) {
             AttendanceRequestStatus::create(['request_status' => $status]);
