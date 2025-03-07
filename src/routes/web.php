@@ -170,5 +170,23 @@ Route::prefix('admin')->group(function () {
          */
         Route::get('/attendance-list', [AdminController::class, 'attendanceList'])
             ->name('attendance.list');
+
+        /**
+         * ==============================
+         * 管理者ユーザーの勤怠管理関連
+         * ==============================
+         */
+
+        /**
+         *  日次勤怠一覧画面（管理者用）を表示（認証必須）
+         */
+        Route::get('/attendance/daily-list/{date?}', [AttendanceController::class, 'attendanceDailyList'])
+            ->name('admin.attendance.daily-list');
+
+        /**
+         *  勤怠詳細画面（管理者用）を表示（認証必須）
+         */
+        Route::get('/attendance/{attendanceId}/show', [AttendanceController::class, 'adminAttendanceShow'])
+            ->name('admin.attendance.show');
     });
 });
