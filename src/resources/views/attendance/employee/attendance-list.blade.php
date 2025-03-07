@@ -9,7 +9,7 @@
 @section('content')
     <div class="container-wrap">
         <div class="container">
-            <h1>勤怠一覧</h1>
+            <h1 class="title">勤怠一覧</h1>
             <div class="month-navigation">
                 <a
                     href="{{ route('employee.attendance.list', ['month' => \Carbon\Carbon::parse($month)->subMonth()->format('Y-m')]) }}">&larr;

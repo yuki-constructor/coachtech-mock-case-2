@@ -28,13 +28,17 @@ class Employee extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    // Employeeは1対多の関係でAttendanceと関連(従業員の勤怠情報）
+    /**
+     *  Employeeは1対多の関係でAttendanceと関連(従業員の勤怠情報）
+     */
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
     }
 
-    // 認証メール送信処理
+    /**
+     *  認証メール送信処理
+     */
     public function sendEmailVerificationNotification()
     {
         Mail::to($this->email)->send(new CustomVerificationEmail($this));

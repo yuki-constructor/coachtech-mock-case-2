@@ -23,7 +23,7 @@ class EmployeeRegisterRequest extends FormRequest
     {
         return [
             'name' => ['required'], // お名前: 入力必須
-            'email' => ['required', 'email', 'unique:users,email'], // メールアドレス: 入力必須、メール形式、重複なし
+            'email' => ['required', 'email', 'unique:employees,email'], // メールアドレス: 入力必須、メール形式、重複なし
             'password' => ['required', 'string', 'min:8', 'confirmed'], // パスワード: 入力必須、8文字以上
             'password_confirmation' => ['required', 'string', 'min:8'], // パスワード: 入力必須、8文字以上、確認用パスワードとの一致
         ];

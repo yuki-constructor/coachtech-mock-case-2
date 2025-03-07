@@ -9,7 +9,7 @@
 @section('content')
     <div class="container-wrap">
         <div class="container">
-            <h1 class="title">会員登録</h1>
+            <h1 class="title-center">会員登録</h1>
             <form class="form" method="POST" action="{{ route('employee.register') }}">
                 @csrf
                 <div class="form-group">

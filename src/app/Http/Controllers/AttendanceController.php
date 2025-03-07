@@ -224,7 +224,7 @@ class AttendanceController extends Controller
         // ログイン中の従業員情報を取得
         $employee = auth('employee')->user();
 
-        // 該当の勤怠データを取得
+        // リクエストされたattendance_idの勤怠情報を取得
         $attendance = Attendance::with('breaks')
             ->findOrFail($attendanceId);
 

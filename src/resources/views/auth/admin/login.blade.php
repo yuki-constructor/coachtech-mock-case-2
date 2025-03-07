@@ -9,7 +9,7 @@
 @section('content')
     <div class="container-wrap">
         <div class="container">
-            <h1 class="title">管理者ログイン</h1>
+            <h1 class="title-center">管理者ログイン</h1>
             {{-- メッセージ --}}
             <div class="message">
                 @if (session()->has('error'))

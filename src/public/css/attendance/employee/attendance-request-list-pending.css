@@ -3,45 +3,40 @@
     text-align: center;
 }
 
-.month-navigation {
-    display: flex;
-    justify-content: space-between;
+/* メニューバー */
+.menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: start;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
-    background-color: white;
-    border-radius: 10px;
-    padding: 10px;
-}
-
-.month-navigation a {
-    font-size: clamp(14px, 1.25vw, 19px);
-    padding: 5px 20px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    border-radius: 5px;
-    letter-spacing: 0.12em;
-    color: #525151;
-}
-
-.month-navigation-center {
-    display: flex;
-    justify-content: center;
-}
-
-.month-navigation-calendar__image {
-    width: 15%;
-    height: auto;
-    margin-right: 10px;
-}
-
-.month {
-    font-size: clamp(18px, 1.65vw, 25px);
+    padding: 10px 20px;
+    margin: 50px 0 50px;
     font-weight: bold;
-    font-family: number;
+    border-bottom: 1px solid #5b5a5a;
 }
 
+.menu__link {
+    grid-column: 1/2;
+}
+
+.menu__link-left {
+    margin-left: 4vw;
+    text-decoration: none;
+    color: #000000;
+}
+
+.menu__link-right {
+    margin-left: 8vw;
+    text-decoration: none;
+    color: #7a7979;
+}
+
+.menu__link-right:hover {
+    text-decoration: underline;
+    color: #000000;
+}
+
+/* 申請一覧 */
 .attendance-table {
     display: grid;
     grid-template-columns: repeat(6, 1fr);

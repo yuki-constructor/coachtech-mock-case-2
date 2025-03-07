@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AttendanceRequestController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
@@ -115,6 +116,24 @@ Route::prefix('employee')->group(function () {
          */
         Route::get('/attendance/{attendanceId}', [AttendanceController::class, 'attendanceShow'])
             ->name('employee.attendance.show');
+    });
+
+    /**
+     * ==============================
+     * 従業員ユーザーの勤怠修正申請関連
+     * ==============================
+     */
+    Route::middleware('auth:employee')->group(function () {
+
+        // 勤怠修正申請処理（認証必須）
+        Route::post('/attendance/{attendanceId}/request', [AttendanceRequestController::class, 'attendanceRequest'])
+            ->name('employee.attendance.request');
+
+        /**
+         *  従業員の勤怠修正申請一覧画面（承認待ち）を表示（認証必須）
+         */
+        Route::get('/attendance/request/list/pending', [AttendanceRequestController::class, 'attendanceRequestListPending'])
+            ->name('employee.attendance.request.list.pending');
     });
 });
 
