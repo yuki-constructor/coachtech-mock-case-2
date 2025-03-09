@@ -48,7 +48,7 @@
                         <span>{{ $attendance->total_break_time }}</span>
 
                         {{-- 勤務時間の合計 --}}
-                        <span>{{ $attendance->work_time }}</span>
+                        <span>{{ $attendance->total_work_time }}</span>
 
                         {{-- 詳細画面へのリンク --}}
                         <a href="{{ route('employee.attendance.show', ['attendanceId' => $attendance->id]) }}">詳細</a>

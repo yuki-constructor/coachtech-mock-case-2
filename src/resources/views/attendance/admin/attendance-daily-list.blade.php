@@ -11,15 +11,15 @@
         <div class="container">
             <h1 class="title">{{ $date->isoFormat('YYYY年M月D日') }}の勤怠</h1>
             <div class="day-navigation">
-                <a href="{{ route('admin.attendance.daily-list', ['date' => $date->copy()->subDay()->toDateString()]) }}">&larr;
-                    前日</a>
+                <a href="{{ route('admin.attendance.daily-list', ['date' => $date->copy()->subDay()->toDateString()]) }}">
+                    &larr;前日</a>
                 <div class="day-navigation-center">
                     <img class="day-navigation-calendar__image" src="{{ asset('storage/photos/logo_images/calendar.png') }}"
                         alt="カレンダー" />
                     <span class="day">{{ $date->format('Y/m/d') }}</span>
                 </div>
-                <a href="{{ route('admin.attendance.daily-list', ['date' => $date->copy()->addDay()->toDateString()]) }}">翌日
-                    &rarr;</a>
+                <a href="{{ route('admin.attendance.daily-list', ['date' => $date->copy()->addDay()->toDateString()]) }}">
+                    翌日&rarr;</a>
             </div>
 
             <div class="attendance-table">

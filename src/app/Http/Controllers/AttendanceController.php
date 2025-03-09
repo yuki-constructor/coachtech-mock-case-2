@@ -7,13 +7,51 @@ use App\Models\AttendanceStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-/**
- * ==============================
- * 従業員ユーザーの勤怠登録関連
- * ==============================
- */
 class AttendanceController extends Controller
 {
+    /**
+     * ==============================
+     * 共通メソッド
+     * ==============================
+     */
+
+    /**
+     * 休憩時間と勤務時間を計算し、フォーマットする共通メソッド
+     * @return void
+     */
+    private function calculateTimes($attendances)
+    {
+        foreach ($attendances as $attendance) {
+            // 休憩時間の合計を計算（分単位）
+            $totalBreakMinutes = $attendance->breaks->sum(function ($break) {
+                if ($break->break_start_time && $break->break_end_time) {
+                    return Carbon::parse($break->break_start_time)->diffInMinutes(Carbon::parse($break->break_end_time));
+                }
+                return 0;
+            });
+
+            // 勤務時間の計算（出勤時間があり、退勤時間もある場合のみ）
+            $workMinutes = ($attendance->start_time && $attendance->end_time)
+                ? Carbon::parse($attendance->start_time)->diffInMinutes(Carbon::parse($attendance->end_time)) - $totalBreakMinutes
+                : 0;
+
+            // 休憩時間 & 勤務時間を H:i 形式でフォーマット
+            $attendance->total_break_time = $totalBreakMinutes > 0
+                ? sprintf('%d:%02d', floor($totalBreakMinutes / 60), $totalBreakMinutes % 60)
+                : '-';
+
+            $attendance->total_work_time = $workMinutes > 0
+                ? sprintf('%d:%02d', floor($workMinutes / 60), $workMinutes % 60)
+                : '-';
+        }
+    }
+
+    /**
+     * ==============================
+     * 従業員ユーザーの勤怠登録関連
+     * ==============================
+     */
+
     /**
      * 従業員の勤怠登録画面を表示
      *
@@ -185,30 +223,9 @@ class AttendanceController extends Controller
             ->with('breaks') // 休憩データも取得
             ->get();
 
-        foreach ($attendances as $attendance) {
+        // 勤務時間・休憩時間を計算
+        $this->calculateTimes($attendances);
 
-            // 休憩時間の合計を計算（分単位）
-            $totalBreakMinutes = $attendance->breaks->sum(function ($break) {
-                if ($break->break_end_time) {
-                    return Carbon::parse($break->break_start_time)->diffInMinutes(
-                        Carbon::parse($break->break_end_time)
-                    );
-                }
-                return 0;
-            });
-
-            // 勤務時間の計算（出勤時間があり、退勤時間もある場合のみ）
-            $workMinutes = 0;
-            if ($attendance->start_time && $attendance->end_time) {
-                $workMinutes = Carbon::parse($attendance->start_time)->diffInMinutes(
-                    Carbon::parse($attendance->end_time)
-                ) - $totalBreakMinutes;
-            }
-
-            // 休憩時間 & 勤務時間をフォーマットして追加
-            $attendance->total_break_time = floor($totalBreakMinutes / 60) . ':' . str_pad($totalBreakMinutes % 60, 2, '0', STR_PAD_LEFT);
-            $attendance->work_time = $workMinutes > 0 ? (floor($workMinutes / 60) . ':' . str_pad($workMinutes % 60, 2, '0', STR_PAD_LEFT)) : '-';
-        }
         return view('attendance.employee.attendance-list', compact('attendances', 'month'));
     }
 
@@ -252,30 +269,9 @@ class AttendanceController extends Controller
             ->with(['employee', 'breaks'])
             ->get();
 
-        foreach ($attendances as $attendance) {
-            // 休憩時間の合計を計算（分単位）
-            $totalBreakMinutes = 0;
-            foreach ($attendance->breaks as $break) {
-                if ($break->break_start_time && $break->break_end_time) {
-                    $totalBreakMinutes += Carbon::parse($break->break_start_time)
-                        ->diffInMinutes(Carbon::parse($break->break_end_time));
-                }
-            }
-            // H:i 形式での休憩時間
-            $attendance->total_break_time = $totalBreakMinutes > 0
-                ? floor($totalBreakMinutes / 60) . ':' . str_pad($totalBreakMinutes % 60, 2, '0', STR_PAD_LEFT)
-                : '-';
+        // 勤務時間・休憩時間を計算
+        $this->calculateTimes($attendances);
 
-            // 勤務時間の合計を計算
-            if ($attendance->start_time && $attendance->end_time) {
-                $workMinutes = Carbon::parse($attendance->start_time)->diffInMinutes($attendance->end_time) - $totalBreakMinutes;
-                $attendance->total_work_time = ($workMinutes > 0)
-                    ? floor($workMinutes / 60) . ':' . str_pad($workMinutes % 60, 2, '0', STR_PAD_LEFT)
-                    : '-';
-            } else {
-                $attendance->total_work_time = '-';
-            }
-        }
         return view('attendance.admin.attendance-daily-list', compact('attendances', 'date'));
     }
 
