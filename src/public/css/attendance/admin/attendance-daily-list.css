@@ -3,7 +3,7 @@
     text-align: center;
 }
 
-.month-navigation {
+.day-navigation {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -14,7 +14,7 @@
     padding: 10px;
 }
 
-.month-navigation a {
+.day-navigation a {
     font-size: clamp(14px, 1.25vw, 19px);
     padding: 5px 20px;
     border: none;
@@ -26,24 +26,23 @@
     text-decoration: none;
 }
 
-.month-navigation a:hover {
+.day-navigation a:hover {
     color: blue;
-    font-weight: bold;
     text-decoration: underline;
 }
 
-.month-navigation-center {
+.day-navigation-center {
     display: flex;
     justify-content: center;
 }
 
-.month-navigation-calendar__image {
+.day-navigation-calendar__image {
     width: 15%;
     height: auto;
     margin-right: 10px;
 }
 
-.month {
+.day {
     font-size: clamp(18px, 1.65vw, 25px);
     font-weight: bold;
     font-family: number;

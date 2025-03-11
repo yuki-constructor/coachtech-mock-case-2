@@ -42,9 +42,8 @@ class AdminController extends Controller
             $loginRequest->session()->regenerate();
 
             // 勤怠一覧画面（管理者）にリダイレクト
-            return redirect()->route('attendance.list');
+            return redirect()->route('admin.attendance.daily-list');
         }
-
         return to_route('admin.login')->with(['error' => 'ログイン情報が登録されていません。']);
     }
 
