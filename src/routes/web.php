@@ -194,5 +194,17 @@ Route::prefix('admin')->group(function () {
          */
         Route::post('/attendance/{attendanceId}/correct', [AttendanceController::class, 'adminAttendanceCorrect'])
             ->name('admin.attendance.correct');
+
+        /**
+         *  従業員一覧画面（管理者用）を表示（認証必須）
+         */
+        Route::get('/attendance/employee-list', [AttendanceController::class, 'attendanceEmployeeList'])
+            ->name('admin.attendance.employee-list');
+
+        /**
+         *  従業員別月次勤怠一覧画面（管理者用）を表示（認証必須）
+         */
+        Route::get('/attendance/monthly-list/{employeeId}', [AttendanceController::class, 'attendanceMonthlyList'])
+            ->name('admin.attendance.monthly-list');
     });
 });

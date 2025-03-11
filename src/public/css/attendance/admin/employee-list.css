@@ -1,0 +1,74 @@
+/* メイン */
+.container {
+    text-align: center;
+}
+
+.attendance-table {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.table-header {
+    display: contents;
+    background-color: #eee;
+}
+
+.table-row {
+    display: contents;
+}
+
+.table-header-name,
+.table-header-mail,
+.table-header-detail {
+    padding: 10px;
+    border-bottom: 2px solid #ccc;
+    text-align: center;
+    color: #525151;
+    font-family: number;
+}
+
+.table-header-name {
+    padding-left: 30%;
+}
+
+.name {
+    padding: 10px;
+    padding-left: 30%;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    color: #525151;
+    font-family: number;
+}
+
+.mail,
+.detail {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    color: #525151;
+    font-family: number;
+}
+
+.table-row a {
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.table-row a:hover {
+    color: blue;
+    text-decoration: underline;
+}
+
+/* レスポンシブ対応 */
+
+/* タブレット: 768px～850px */
+@media (max-width: 850px) and (min-width: 768px) {
+    /* メイン */
+    .container-wrap {
+        grid-template-columns: 0.5fr 4fr 0.5fr;
+    }
+}
