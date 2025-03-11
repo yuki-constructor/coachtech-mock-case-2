@@ -188,5 +188,11 @@ Route::prefix('admin')->group(function () {
          */
         Route::get('/attendance/{attendanceId}/show', [AttendanceController::class, 'adminAttendanceShow'])
             ->name('admin.attendance.show');
+
+        /**
+         *  勤怠修正処理（管理者用）（認証必須）
+         */
+        Route::post('/attendance/{attendanceId}/correct', [AttendanceController::class, 'adminAttendanceCorrect'])
+            ->name('admin.attendance.correct');
     });
 });
