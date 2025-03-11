@@ -18,7 +18,7 @@
                 @endif
             </span>
 
-            <form action="" method="POST">
+            <form action="{{ route('admin.attendance.correct', ['attendanceId' => $attendance->id]) }}" method="POST">
                 @csrf
                 <input type="hidden" name="date" value="{{ $attendance->date }}">
                 <div class="attendance-table">
