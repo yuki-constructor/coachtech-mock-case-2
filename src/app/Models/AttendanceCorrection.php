@@ -35,11 +35,11 @@ class AttendanceCorrection extends Model
         return $this->belongsTo(Admin::class);
     }
 
-     /**
+    /**
      *  AttendanceCorrection は１対多の関係でAttendanceCorrectionBreakと関連（一つのattendance_correctionsテーブルのidに紐づく attendance_correction_breaksテーブルのレコードが複数存在する場合がある）
      */
     public function attendanceCorrectionBreaks()
-{
-    return $this->hasMany(AttendanceCorrectionBreak::class, 'attendance_correction_id');
-}
+    {
+        return $this->hasMany(AttendanceCorrectionBreak::class, 'attendance_correction_id');
+    }
 }

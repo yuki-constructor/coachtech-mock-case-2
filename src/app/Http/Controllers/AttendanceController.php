@@ -8,6 +8,7 @@ use App\Models\AttendanceCorrection;
 use App\Models\AttendanceCorrectionBreak;
 use App\Models\AttendanceStatus;
 use App\Models\BreakModel;
+use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -265,7 +266,6 @@ class AttendanceController extends Controller
      * @route POST /admin/attendance/{attendanceId}/correct
      * @return \Illuminate\Http\RedirectResponse
      */
-    // public function adminAttendanceCorrect(AttendanceRequestRequest $request, $attendanceId)
     public function adminAttendanceCorrect(AttendanceRequestRequest $request, $attendanceId)
     {
         // リクエストされたattendance_idの勤怠情報を取得
@@ -276,7 +276,7 @@ class AttendanceController extends Controller
         $originalEndTime = $attendance->end_time;
 
         // 勤怠修正履歴を保存
-        $attendanceCorrection=AttendanceCorrection::create([
+        $attendanceCorrection = AttendanceCorrection::create([
             'attendance_id' => $attendance->id,
             'admin_id' => Auth::id(), // 現在ログインしている管理者
             'original_start_time' => $originalStartTime,
@@ -288,8 +288,6 @@ class AttendanceController extends Controller
 
         // 出勤時間・退勤時間の更新
         $attendance->update([
-            // 'start_time' => $request->start_time,
-            // 'end_time' => $request->end_time,
             'start_time' => \Carbon\Carbon::parse($attendance->date . ' ' . $request->start_time), // 日付と組み合わせる
             'end_time' => \Carbon\Carbon::parse($attendance->date . ' ' . $request->end_time), // 日付と組み合わせる
         ]);
@@ -301,9 +299,7 @@ class AttendanceController extends Controller
             if (!empty($breakData['start']) && !empty($breakData['end'])) {
 
                 // 修正前のデータを保存
-                // $originalBreakStartTime = $attendance->breaks->break_start_time;
                 $originalBreakStartTime = BreakModel::findOrFail($breakId)->break_start_time;
-                // $originalBreakEndTime = $attendance->breaks->break_end_time;
                 $originalBreakEndTime = BreakModel::findOrFail($breakId)->break_end_time;
 
                 // 休憩時間の修正履歴を保存
@@ -318,8 +314,6 @@ class AttendanceController extends Controller
 
                 // 既存の break レコードを更新
                 BreakModel::where('id', $breakId)->update([
-                    // 'break_start_time' => $breakData['start'],
-                    // 'break_end_time' => $breakData['end'],
                     'break_start_time' => \Carbon\Carbon::parse($attendance->date . ' ' . $breakData['start']), // 日付と組み合わせる
                     'break_end_time' => \Carbon\Carbon::parse($attendance->date . ' ' . $breakData['end']), // 日付と組み合わせる
                 ]);
@@ -333,6 +327,49 @@ class AttendanceController extends Controller
         }
 
         return redirect()->route('admin.attendance.show', $attendanceId)->with('success', $attendance->employee->name . 'さんの勤怠情報を修正しました。');
+    }
+
+    /**
+     * 従業員一覧画面（管理者）を表示
+     *
+     * @route GET /admin/attendance/employee-list
+     * @return \Illuminate\View\View
+     */
+    public function attendanceEmployeeList()
+    {
+        // 全従業員のデータを取得
+        $employees = Employee::with('attendances')
+            ->get();
+
+        return view('attendance.admin.employee-list', compact('employees'));
+    }
+
+    /**
+     * 従業員別月次勤怠一覧画面（管理者）を表示
+     *
+     * @route GET /admin/attendance/monthly-list/{employeeId}
+     * @return \Illuminate\View\View
+     */
+    public function attendanceMonthlyList(Request $request, $employeeId)
+    {
+        // リクエストされた従業員情報を取得
+        $employee = Employee::findOrFail($employeeId);
+
+        // 指定された月を取得（デフォルトは現在の月）
+        $month = $request->query('month', now()->format('Y-m'));
+
+        // 指定月の勤怠データを取得
+        $attendances = Attendance::where('employee_id', $employeeId)
+            ->where('date', 'like', $month . '%')
+            ->orderBy('date', 'asc')
+            ->with(['employee', 'breaks']) // 従業員データ、休憩データも取得
+            ->get();
+
+        // 勤務時間・休憩時間を計算
+        $this->calculateBreakTime($attendances);
+        $this->calculateWorkTime($attendances);
+
+        return view('attendance.admin.attendance-monthly-list', compact('employee', 'attendances', 'month'));
     }
 
     /**
@@ -353,7 +390,6 @@ class AttendanceController extends Controller
                 }
                 return 0;
             });
-
             // 休憩時間を H:i 形式でフォーマット
             $attendance->total_break_time = $totalBreakMinutes > 0
                 ? sprintf('%d:%02d', floor($totalBreakMinutes / 60), $totalBreakMinutes % 60)
@@ -374,12 +410,10 @@ class AttendanceController extends Controller
                     }
                     return 0;
                 });
-
                 $workMinutes = Carbon::parse($attendance->start_time)->diffInMinutes(Carbon::parse($attendance->end_time)) - $totalBreakMinutes;
             } else {
                 $workMinutes = 0;
             }
-
             // 勤務時間を H:i 形式でフォーマット
             $attendance->total_work_time = $workMinutes > 0
                 ? sprintf('%d:%02d', floor($workMinutes / 60), $workMinutes % 60)
