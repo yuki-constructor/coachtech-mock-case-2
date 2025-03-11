@@ -10,7 +10,7 @@
     <div class="container-wrap">
         <div class="container">
             <h1 class="title-center">会員登録</h1>
-            <form class="form" method="POST" action="{{ route('employee.register') }}">
+            <form class="form" method="POST" action="{{ route('employee.store') }}">
                 @csrf
                 <div class="form-group">
                     <label class="form-group__label" for="name">名前</label>
