@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AttendanceRequestRequest;
 use App\Models\Attendance;
+use App\Models\AttendanceCorrection;
+use App\Models\AttendanceCorrectionBreak;
 use App\Models\AttendanceStatus;
 use App\Models\BreakModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
 {
@@ -268,6 +271,21 @@ class AttendanceController extends Controller
         // リクエストされたattendance_idの勤怠情報を取得
         $attendance = Attendance::with('breaks')->findOrFail($attendanceId);
 
+        // 修正前のデータを保存
+        $originalStartTime = $attendance->start_time;
+        $originalEndTime = $attendance->end_time;
+
+        // 勤怠修正履歴を保存
+        $attendanceCorrection=AttendanceCorrection::create([
+            'attendance_id' => $attendance->id,
+            'admin_id' => Auth::id(), // 現在ログインしている管理者
+            'original_start_time' => $originalStartTime,
+            'original_end_time' => $originalEndTime,
+            'corrected_start_time' => \Carbon\Carbon::parse($attendance->date . ' ' . $request->start_time),
+            'corrected_end_time' => \Carbon\Carbon::parse($attendance->date . ' ' . $request->end_time),
+            'reason' => $request->input('reason'),
+        ]);
+
         // 出勤時間・退勤時間の更新
         $attendance->update([
             // 'start_time' => $request->start_time,
@@ -281,6 +299,23 @@ class AttendanceController extends Controller
 
         foreach ($requestBreaks as $breakId => $breakData) {
             if (!empty($breakData['start']) && !empty($breakData['end'])) {
+
+                // 修正前のデータを保存
+                // $originalBreakStartTime = $attendance->breaks->break_start_time;
+                $originalBreakStartTime = BreakModel::findOrFail($breakId)->break_start_time;
+                // $originalBreakEndTime = $attendance->breaks->break_end_time;
+                $originalBreakEndTime = BreakModel::findOrFail($breakId)->break_end_time;
+
+                // 休憩時間の修正履歴を保存
+                AttendanceCorrectionBreak::create([
+                    'attendance_correction_id' => $attendanceCorrection->id,
+                    'break_id' => $breakId,
+                    'original_break_start' => $originalBreakStartTime,
+                    'original_break_end' => $originalBreakEndTime,
+                    'corrected_break_start' => \Carbon\Carbon::parse($attendance->date . ' ' . $breakData['start']),
+                    'corrected_break_end' => \Carbon\Carbon::parse($attendance->date . ' ' . $breakData['end']),
+                ]);
+
                 // 既存の break レコードを更新
                 BreakModel::where('id', $breakId)->update([
                     // 'break_start_time' => $breakData['start'],

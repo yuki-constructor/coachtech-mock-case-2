@@ -42,4 +42,12 @@ class Attendance extends Model
     {
         return $this->hasMany(BreakModel::class);
     }
+
+    /**
+     *  Attendanceは１対多の関係でAttendanceCorrectionと関連（管理者による修正は何度でもできる）
+     */
+    public function attendanceCorrections()
+    {
+        return $this->hasMany(AttendanceCorrection::class);
+    }
 }
