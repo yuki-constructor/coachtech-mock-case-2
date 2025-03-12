@@ -1,0 +1,79 @@
+/* メイン */
+.container-wrap {
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.container {
+    text-align: center;
+    margin-top: 20vh;
+}
+
+.error-message {
+    font-weight: bold;
+    color: #f00c0c;
+}
+
+.message {
+    font-weight: bold;
+    margin: 5px;
+}
+
+.mail-check-link {
+    margin-top: 50px;
+}
+
+.mail-check-link__btn {
+    background-color: #c7c3c3;
+    color: #000;
+    font-size: clamp(18px, 1.65vw, 25px);
+    font-weight: bold;
+    padding: 15px 30px;
+    border: solid 1px #000;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    text-decoration: none;
+}
+
+.mail-check-link__btn:hover {
+    background-color: #888787;
+}
+
+.send-mail-link {
+    grid-column: 2/3;
+    grid-row: 1/2;
+    margin-top: 50px;
+}
+
+.send-mail-link__btn {
+    font-size: clamp(14px, 1.3vw, 20px);
+    color: #007bff;
+    text-decoration: none;
+    border: none;
+    background: transparent;
+}
+
+.send-mail-link__btn:hover {
+    text-decoration: underline;
+}
+
+/* レスポンシブ対応 */
+
+/* タブレット: 768px～850px */
+@media (max-width: 850px) and (min-width: 768px) {
+    .container-wrap {
+        grid-template-columns: 0.5fr 2fr 0.5fr;
+    }
+
+    .form-group__submit-btn {
+        padding: 10px;
+    }
+}
+
+/* PC: 1400px～1540px */
+@media screen and (min-width: 1400px) and (max-width: 1540px) {
+    .form-group__submit-btn {
+        padding: 20px;
+    }
+}

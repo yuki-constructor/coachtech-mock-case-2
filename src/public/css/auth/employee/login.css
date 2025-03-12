@@ -1,0 +1,97 @@
+/* メイン */
+.error-message {
+    color: #e65a5a;
+}
+
+.message p {
+    color: #e65a5a;
+    text-align: center;
+}
+
+.container-wrap {
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group__label {
+    font-size: clamp(16px, 1.5vw, 23px);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group__input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: clamp(16px, 1.5vw, 23px);
+    border: 1px solid #545151;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group__submit-btn {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    font-size: clamp(18px, 1.65vw, 25px);
+    font-weight: bold;
+    padding: 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 50px;
+    margin-bottom: 15px;
+}
+
+.form-group__submit-btn:hover {
+    background-color: #464545;
+}
+
+.login-link {
+    grid-column: 2/3;
+    grid-row: 1/2;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.login-link__link-btn {
+    font-size: clamp(14px, 1.3vw, 20px);
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-link__link-btn:hover {
+    text-decoration: underline;
+}
+
+/* レスポンシブ対応 */
+
+/* タブレット: 768px～850px */
+@media (max-width: 850px) and (min-width: 768px) {
+    .container-wrap {
+        grid-template-columns: 0.5fr 2fr 0.5fr;
+    }
+
+    .form-group__input {
+        padding: 10px;
+    }
+
+    .form-group__submit-btn {
+        padding: 10px;
+    }
+}
+
+/* PC: 1400px～1540px */
+@media screen and (min-width: 1400px) and (max-width: 1540px) {
+    .form-group__input {
+        padding: 20px;
+    }
+
+    .form-group__submit-btn {
+        padding: 20px;
+    }
+}

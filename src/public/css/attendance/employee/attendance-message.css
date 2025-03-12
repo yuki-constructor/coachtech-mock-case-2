@@ -1,0 +1,51 @@
+/* メイン */
+.container-wrap {
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.container {
+    text-align: center;
+    margin-top: 20vh;
+}
+
+.work-status {
+    color: #737272;
+    font-size: clamp(16px, 1.5vw, 23px);
+    font-weight: bold;
+    background-color: #c1bfbf;
+    border: none;
+    border-radius: 100vh;
+    width: fit-content;
+    margin: 10px auto;
+    padding: 5px 20px;
+}
+
+.date {
+    font-family: number;
+    font-size: clamp(25px, 2.3vw, 35px);
+    margin: 20px;
+}
+
+.time {
+    font-family: number;
+    font-size: clamp(45px, 4vw, 80px);
+    font-weight: bold;
+    margin: 10px;
+}
+
+.message {
+    margin-top: 50px;
+    letter-spacing: 0.15em;
+    text-indent: 0.15em;
+    font-weight: bold;
+}
+
+/* レスポンシブ対応 */
+
+/* タブレット: 768px～850px */
+@media (max-width: 850px) and (min-width: 768px) {
+    /* メイン */
+    .container-wrap {
+        grid-template-columns: 0.5fr 2fr 0.5fr;
+    }
+}
