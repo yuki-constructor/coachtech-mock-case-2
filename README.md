@@ -14,7 +14,7 @@ $ git clone git@github.com:yuki-constructor/coachtech-mock-case-2.git
 
  src ディレクトリに移動し、.env.example を .env にコピーします。
 
-$ cd coachtech-mock-case2/src/
+$ cd coachtech-mock-case-2/src/
 
 $ cp .env.example .env
 
@@ -96,7 +96,9 @@ $ php artisan migrate:fresh --seed
 $ sudo chmod -R 777 src/*
 
 （PHP コンテナ内に入っている場合は、以下を実行）
-$ chmod -R 777 www/.*
+$ cd ../  
+$ chmod -R 777 www/.*  
+$ cd www  
 
 ## ⑫Mailhog の設定
 
