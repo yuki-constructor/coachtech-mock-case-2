@@ -1,0 +1,86 @@
+/* メイン */
+.container {
+    text-align: center;
+}
+
+/* メニューバー */
+.menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: start;
+    align-items: center;
+    padding: 10px 20px;
+    margin: 50px 0 50px;
+    font-weight: bold;
+    border-bottom: 1px solid #5b5a5a;
+}
+
+.menu__link {
+    grid-column: 1/2;
+}
+
+.menu__link-left {
+    margin-left: 4vw;
+    text-decoration: none;
+    color: #000000;
+}
+
+.menu__link-right {
+    margin-left: 8vw;
+    text-decoration: none;
+    color: #7a7979;
+}
+
+.menu__link-right:hover {
+    text-decoration: underline;
+    color: #000000;
+}
+
+/* 申請一覧 */
+.attendance-table {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.table-header {
+    display: contents;
+    background-color: #eee;
+}
+
+.table-row {
+    display: contents;
+}
+
+.table-header span,
+.table-row span,
+.table-row a {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    color: #525151;
+    font-family: number;
+}
+
+.table-row a {
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.table-row a:hover {
+    color: blue;
+    text-decoration: underline;
+}
+
+/* レスポンシブ対応 */
+
+/* タブレット: 768px～850px */
+@media (max-width: 850px) and (min-width: 768px) {
+    /* メイン */
+    .container-wrap {
+        grid-template-columns: 0.5fr 4fr 0.5fr;
+    }
+}

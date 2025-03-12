@@ -116,14 +116,12 @@ Route::prefix('employee')->group(function () {
          */
         Route::get('/attendance/{attendanceId}', [AttendanceController::class, 'attendanceShow'])
             ->name('employee.attendance.show');
-    });
 
-    /**
-     * ==============================
-     * 従業員ユーザーの勤怠修正申請関連
-     * ==============================
-     */
-    Route::middleware('auth:employee')->group(function () {
+        /**
+         * ==============================
+         * 従業員ユーザーの勤怠修正申請関連
+         * ==============================
+         */
 
         // 勤怠修正申請処理（認証必須）
         Route::post('/attendance/{attendanceId}/request', [AttendanceRequestController::class, 'attendanceRequest'])
@@ -206,5 +204,29 @@ Route::prefix('admin')->group(function () {
          */
         Route::get('/attendance/monthly-list/{employeeId}', [AttendanceController::class, 'attendanceMonthlyList'])
             ->name('admin.attendance.monthly-list');
+
+        /**
+         *  従業員の勤怠修正申請一覧画面（承認待ち）（管理者用）を表示（認証必須）
+         */
+        Route::get('/attendance/request/list/pending', [AttendanceRequestController::class, 'adminAttendanceRequestListPending'])
+            ->name('admin.attendance.request.list.pending');
+
+        /**
+         *  従業員の勤怠修正申請一覧画面（承認済み）（管理者用）を表示（認証必須）
+         */
+        Route::get('/attendance/request/list/approved', [AttendanceRequestController::class, 'adminAttendanceRequestListApproved'])
+            ->name('admin.attendance.request.list.approved');
+
+        /**
+         *  修正申請承認画面を表示（認証必須）
+         */
+        Route::get('/attendance/request/{attendanceRequestId}/show', [AttendanceRequestController::class, 'adminAttendanceRequestShow'])
+            ->name('admin.attendance.request.show');
+
+        /**
+         *  勤怠修正承認処理（管理者用）（認証必須）
+         */
+        Route::post('/attendance/request/{attendanceRequestId}/acknowledge', [AttendanceRequestController::class, 'attendanceRequestAcknowledge'])
+            ->name('admin.attendance.request.acknowledge');
     });
 });
