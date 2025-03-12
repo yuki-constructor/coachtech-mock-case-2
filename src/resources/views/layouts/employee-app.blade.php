@@ -33,7 +33,8 @@
                             </a>
                         </li>
                         <li>
-                            <a class="nav__application" href="">
+                            <a class="nav__application" href="{{ route('employee.attendance.request.list.pending') }}"
+                                method="GET">
                                 申請
                             </a>
                         </li>
