@@ -8,11 +8,15 @@
 !/public/storage/app/public/
 !/public/storage/app/public/*
 !/public/storage/public/photos/
+!/public/storage/framework/
+!/public/storage/framework/*
 /storage/*
 !/storage/app/
 !/storage/app/public/
 /storage/app/public/*
 !/storage/app/public/photos/
+!/storage/framework/
+!/storage/framework/*
 # ▲追加
 /storage/*.key
 /storage/pail
