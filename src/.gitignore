@@ -10,6 +10,8 @@
 !/public/storage/public/photos/
 !/public/storage/framework/
 !/public/storage/framework/*
+/public/storage/logs/*
+!/public/storage/logs/
 /storage/*
 !/storage/app/
 !/storage/app/public/
@@ -17,6 +19,8 @@
 !/storage/app/public/photos/
 !/storage/framework/
 !/storage/framework/*
+/storage/logs/*
+!/storage/logs/
 # ▲追加
 /storage/*.key
 /storage/pail
