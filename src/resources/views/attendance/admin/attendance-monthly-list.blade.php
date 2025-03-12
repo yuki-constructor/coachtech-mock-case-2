@@ -23,7 +23,6 @@
                     href="{{ route('admin.attendance.monthly-list', ['employeeId' => $employee->id, 'month' => \Carbon\Carbon::parse($month)->addMonth()->format('Y-m')]) }}">翌月
                     &rarr;</a>
             </div>
-
             <div class="attendance-table">
                 <div class="table-header">
                     <span>日付</span>
@@ -33,9 +32,9 @@
                     <span>合計</span>
                     <span>詳細</span>
                 </div>
-
                 @foreach ($attendances as $attendance)
                     <div class="table-row">
+                        {{-- 日付 --}}
                         <span>{{ \Carbon\Carbon::parse($attendance->date)->locale('ja')->isoFormat('MM/DD (ddd)') }}</span>
 
                         {{-- 出勤時刻 --}}
@@ -54,9 +53,10 @@
                         <a href="{{ route('admin.attendance.show', ['attendanceId' => $attendance->id]) }}">詳細</a>
                     </div>
                 @endforeach
-
             </div>
-            <a href="" class="csv-button">
+            {{-- CSV出力 --}}
+            <a href="{{ route('admin.attendance.monthly-list.export-csv', ['employeeId' => $employee->id, 'month' => $month]) }}"
+                class="csv-button">
                 CSV出力
             </a>
         </div>
