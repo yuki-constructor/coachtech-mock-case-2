@@ -26,7 +26,8 @@
                             </div>
                         @endif
                     </div>
-                    <input class="form-group__input" type="text" id="name" name="name" />
+                    <input class="form-group__input" type="text" id="name" name="name"
+                        value="{{ old('name') }}" />
                 </div>
                 <div class="form-group">
                     <label class="form-group__label" for="email">メールアドレス</label>
@@ -42,7 +43,8 @@
                             </div>
                         @endif
                     </div>
-                    <input class="form-group__input" type="email" id="email" name="email" />
+                    <input class="form-group__input" type="email" id="email" name="email"
+                        value="{{ old('email') }}" />
                 </div>
                 <div class="form-group">
                     <label class="form-group__label" for="password">パスワード</label>

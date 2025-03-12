@@ -12,6 +12,7 @@ use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AttendanceController extends Controller
 {
@@ -370,6 +371,87 @@ class AttendanceController extends Controller
         $this->calculateWorkTime($attendances);
 
         return view('attendance.admin.attendance-monthly-list', compact('employee', 'attendances', 'month'));
+    }
+
+    /**
+     * CSV出力処理
+     *
+     * @route GET /admin/attendance/monthly-list/{employeeId}/export-csv
+     * @return \Illuminate\View\View
+     */
+    public function exportCsv(Request $request, $employeeId): StreamedResponse
+    {
+        // 従業員情報を取得
+        $employee = Employee::findOrFail($employeeId);
+
+        // 指定された月を取得（デフォルトは現在の月）
+        $month = $request->query('month', now()->format('Y-m'));
+
+        // 指定月の勤怠データを取得
+        $attendances = Attendance::where('employee_id', $employeeId)
+            ->where('date', 'like', $month . '%')
+            ->orderBy('date', 'asc')
+            ->with(['breaks']) // 休憩データも取得
+            ->get();
+
+        // CSVのストリームレスポンスを作成
+        $fileName = 'attendance_' . $employee->name . '_' . $month . '.csv';
+
+        $response = new StreamedResponse(function () use ($attendances, $employee, $month) {
+            $handle = fopen('php://output', 'w');
+
+            // UTF-8 の BOM を出力
+            echo "\xEF\xBB\xBF";
+
+            // 従業員名と勤務月を出力
+            fputcsv($handle, ['名前：' . $employee->name, '勤務月：' . $month]);
+
+            // ヘッダー行を出力
+            fputcsv($handle, ['日付', '出勤', '退勤', '休憩時間', '勤務時間'],);
+
+            foreach ($attendances as $attendance) {
+                // 休憩時間の合計を計算（分単位）
+                $totalBreakMinutes = $attendance->breaks->sum(function ($break) {
+                    if ($break->break_end_time) {
+                        return Carbon::parse($break->break_start_time)
+                            ->diffInMinutes(Carbon::parse($break->break_end_time));
+                    }
+                    return 0;
+                });
+
+                // H:i 形式での休憩時間
+                $totalBreakTime = floor($totalBreakMinutes / 60) . ':' . str_pad($totalBreakMinutes % 60, 2, '0', STR_PAD_LEFT);
+
+                // 勤務時間の計算
+                if ($attendance->start_time && $attendance->end_time) {
+                    $workMinutes = Carbon::parse($attendance->start_time)
+                        ->diffInMinutes(Carbon::parse($attendance->end_time)) - $totalBreakMinutes;
+
+                    $totalWorkTime = ($workMinutes > 0)
+                        ? floor($workMinutes / 60) . ':' . str_pad($workMinutes % 60, 2, '0', STR_PAD_LEFT)
+                        : '-';
+                } else {
+                    $totalWorkTime = '-';
+                }
+
+                // データ行を出力
+                fputcsv($handle, [
+                    Carbon::parse($attendance->date)->format('Y-m-d'),
+                    $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '-',
+                    $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '-',
+                    $totalBreakTime,
+                    $totalWorkTime,
+                ]);
+            }
+
+            fclose($handle);
+        });
+
+        // ヘッダーを設定
+        $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+        $response->headers->set('Content-Disposition', "attachment; filename={$fileName}");
+
+        return $response;
     }
 
     /**

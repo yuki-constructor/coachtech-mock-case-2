@@ -62,12 +62,13 @@ Route::prefix('employee')->group(function () {
     Route::post('/email/verification-notification/{employeeId}', [EmployeeController::class, 'resend'])
         ->name('verification.resend');
 
-    /**
-     * ==============================
-     * 従業員ユーザーの勤怠登録関連
-     * ==============================
-     */
     Route::middleware('auth:employee')->group(function () {
+
+        /**
+         * ==============================
+         * 従業員ユーザーの勤怠登録関連
+         * ==============================
+         */
 
         /**
          *  従業員の勤怠登録画面を表示（認証必須）
@@ -210,6 +211,12 @@ Route::prefix('admin')->group(function () {
          */
         Route::get('/attendance/monthly-list/{employeeId}', [AttendanceController::class, 'attendanceMonthlyList'])
             ->name('admin.attendance.monthly-list');
+
+        /**
+         *  CSV出力
+         */
+        Route::get('/attendance/monthly-list/{employeeId}/export-csv', [AttendanceController::class, 'exportCsv'])
+            ->name('admin.attendance.monthly-list.export-csv');
 
         /**
          *  従業員の勤怠修正申請一覧画面（承認待ち）（管理者用）を表示（認証必須）
