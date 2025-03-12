@@ -21,6 +21,7 @@
 }
 
 .date {
+    font-family: number;
     font-size: clamp(25px, 2.3vw, 35px);
     margin: 20px;
 }

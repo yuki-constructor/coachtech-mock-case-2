@@ -17,7 +17,7 @@
                     {{-- 名前 --}}
                     <div class="table-row">
                         <span class="label">名前</span>
-                        <span class="value">{{ auth('employee')->user()->name }}</span>
+                        <span class="name">{{ auth('employee')->user()->name }}</span>
                         <span class="error-message"></span>
                     </div>
 

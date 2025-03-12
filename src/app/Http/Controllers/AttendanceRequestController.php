@@ -7,7 +7,9 @@ use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Models\AttendanceRequestBreak;
 use App\Models\AttendanceRequestStatus;
+use App\Models\BreakModel;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AttendanceRequestController extends Controller
@@ -86,5 +88,105 @@ class AttendanceRequestController extends Controller
             ->get();
 
         return view('attendance.employee.attendance-request-list-pending', compact('attendanceRequests', 'employee'));
+    }
+
+    /**
+     * ==============================
+     * 管理者ユーザーの勤怠修正承認関連
+     * ==============================
+     */
+
+    /**
+     * 勤怠修正申請一覧画面（承認待ち）を表示
+     * @route GET /admin/attendance/request/list/pending
+     * @return \Illuminate\View\View
+     */
+    public function adminAttendanceRequestListPending()
+    {
+        // AttendanceRequestStatusモデルでステータスを定数化。attendance_request_statusesテーブルから「承認待ち」のidを取得
+        $pendingStatus = AttendanceRequestStatus::where('request_status', AttendanceRequestStatus::STATUS_PENDING_APPROVAL)->first()->id;
+
+        // 従業員の承認待ち申請を取得
+        $attendanceRequests = AttendanceRequest::where('attendance_request_status_id', $pendingStatus)
+            ->with(['attendance', 'attendance.employee', 'attendanceRequestStatus'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('attendance.admin.attendance-request-list-pending', compact('attendanceRequests'));
+    }
+
+    /**
+     * 勤怠修正申請一覧画面（承認済み）を表示
+     * @route GET /admin/attendance/request/list/approved
+     * @return \Illuminate\View\View
+     */
+    public function adminAttendanceRequestListApproved()
+    {
+        // AttendanceRequestStatusモデルでステータスを定数化。attendance_request_statusesテーブルから「承認済み」のidを取得
+        $approvedStatus = AttendanceRequestStatus::where('request_status', AttendanceRequestStatus::STATUS_APPROVED)->first()->id;
+
+        // 従業員の承認済み申請を取得
+        $attendanceRequests = AttendanceRequest::where('attendance_request_status_id', $approvedStatus)
+            ->with(['attendance', 'attendance.employee', 'attendanceRequestStatus'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('attendance.admin.attendance-request-list-approved', compact('attendanceRequests'));
+    }
+
+    /**
+     * 修正申請承認画面を表示
+     *
+     * @route GET /admin/attendance/request/{attendanceRequestId}/show
+     * @return \Illuminate\View\View
+     */
+    public function adminAttendanceRequestShow($attendanceRequestId)
+    {
+        // リクエストされたattendance_request_idのレコードを取得
+        $attendanceRequest = AttendanceRequest::with('attendanceRequestBreaks')
+            ->findOrFail($attendanceRequestId);
+
+        // AttendanceRequestStatusモデルでステータスを定数化。attendance_request_statusesテーブルから「承認済み」のidを取得
+        $approvedStatusId = AttendanceRequestStatus::where('request_status', AttendanceRequestStatus::STATUS_APPROVED)->value('id');
+
+        return view('attendance.admin.attendance-request-show', compact(['attendanceRequest', 'approvedStatusId']));
+    }
+
+
+    /**
+     * 修正申請の承認処理（管理者）
+     *
+     * @route POST /admin/attendance/{attendanceId}/correct
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function attendanceRequestAcknowledge(Request $request, $attendanceRequestId)
+    {
+        // 対象の申請を取得
+        $attendanceRequest = AttendanceRequest::with('attendanceRequestBreaks')->findOrFail($attendanceRequestId);
+        $attendance = $attendanceRequest->attendance;
+
+        // 勤怠テーブルの更新
+        $attendance->update([
+            'start_time' => $attendanceRequest->start_time,
+            'end_time' => $attendanceRequest->end_time,
+        ]);
+        // 休憩時間の更新
+        foreach ($attendanceRequest->attendanceRequestBreaks as $attendanceRequestBreak) {
+            $break = BreakModel::find($attendanceRequestBreak->break_id);
+            if ($break) {
+                $break->update([
+                    'break_start_time' => $attendanceRequestBreak->break_start_time,
+                    'break_end_time' => $attendanceRequestBreak->break_end_time,
+                ]);
+            }
+        }
+        // AttendanceRequestStatusモデルでステータスを定数化。attendance_request_statusesテーブルから「承認済み」のidを取得
+        $approvedStatusId = AttendanceRequestStatus::where('request_status', AttendanceRequestStatus::STATUS_APPROVED)->value('id');
+
+        // 修正申請のステータスを「承認済み」に更新
+        $attendanceRequest->update([
+            'attendance_request_status_id' => $approvedStatusId,
+        ]);
+        return view('attendance.admin.attendance-request-show', compact(['attendanceRequest', 'approvedStatusId']));
     }
 }

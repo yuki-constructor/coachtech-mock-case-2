@@ -2,7 +2,6 @@
 .container {
     text-align: center;
 }
-
 .attendance-table {
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr;
@@ -41,7 +40,7 @@
     grid-column: 2 / 3;
     font-weight: bold;
     text-align: left;
-    padding: 30px 0px;
+    padding: 30px 1em;
     border-bottom: 1px solid #ccc;
 }
 
@@ -53,6 +52,7 @@
     border-bottom: 1px solid #ccc;
     font-weight: bold;
     font-family: number;
+    padding: 0 1em;
 }
 
 .time {
@@ -70,7 +70,6 @@
     width: 100%;
     text-align: center;
     display: inline-block;
-    padding: 5px 10px;
     border-radius: 5px;
     font-weight: bold;
     border-color: #cfcece;
@@ -80,6 +79,14 @@
 .reason {
     grid-column: 2 / 3;
     border-bottom: 1px solid #ccc;
+}
+
+.reason span {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 1em;
+    font-weight: bold;
 }
 
 .reason__input {
@@ -103,10 +110,27 @@
     cursor: pointer;
     justify-self: end;
     font-size: clamp(18px, 1.65vw, 25px);
+    letter-spacing: 3px;
+    font-weight: bold;
 }
 
 .edit-button:hover {
     background-color: #444;
+}
+
+.approved-button {
+    display: block;
+    margin: 100px 0;
+    padding: 10px 20px;
+    background-color: #666464;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-self: end;
+    font-size: clamp(18px, 1.65vw, 25px);
+    letter-spacing: 3px;
+    font-weight: bold;
 }
 
 /* レスポンシブ対応 */
