@@ -132,6 +132,18 @@ Route::prefix('employee')->group(function () {
          */
         Route::get('/attendance/request/list/pending', [AttendanceRequestController::class, 'attendanceRequestListPending'])
             ->name('employee.attendance.request.list.pending');
+
+        /**
+         *  従業員の勤怠修正申請一覧画面（承認済み）を表示（認証必須）
+         */
+        Route::get('/attendance/request/list/approved', [AttendanceRequestController::class, 'attendanceRequestListApproved'])
+            ->name('employee.attendance.request.list.approved');
+
+        /**
+         *  修正申請詳細画面を表示（認証必須）
+         */
+        Route::get('/attendance/request/{attendanceRequestId}/show', [AttendanceRequestController::class, 'attendanceRequestShow'])
+            ->name('employee.attendance.request.show');
     });
 });
 
@@ -162,12 +174,6 @@ Route::prefix('admin')->group(function () {
         ->name('admin.logout');
 
     Route::middleware('auth:admin')->group(function () {
-
-        /**
-         *  管理者の勤怠リストを表示（認証必須）
-         */
-        Route::get('/attendance-list', [AdminController::class, 'attendanceList'])
-            ->name('attendance.list');
 
         /**
          * ==============================

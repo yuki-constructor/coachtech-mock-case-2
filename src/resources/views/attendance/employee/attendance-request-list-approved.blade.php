@@ -1,9 +1,9 @@
 @extends('layouts.employee-app')
 
-@section('title', '勤怠修正申請一覧（承認待ち）画面（従業員）')
+@section('title', '勤怠修正申請一覧（承認済み）画面（従業員）')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/attendance/employee/attendance-request-list-pending.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/attendance/employee/attendance-request-list-approved.css') }}">
 @endpush
 
 @section('content')
@@ -13,8 +13,8 @@
             {{-- メニューバー --}}
             <div class="menu">
                 <div class="menu__link">
-                    <a href="" class="menu__link-left">承認待ち</a>
-                    <a href="{{ route('employee.attendance.request.list.approved') }}" class="menu__link-right">承認済み</a>
+                    <a href="{{ route('employee.attendance.request.list.pending') }}" class="menu__link-left">承認待ち</a>
+                    <a class="menu__link-right">承認済み</a>
                 </div>
             </div>
             {{-- 申請一覧 --}}

@@ -66,13 +66,12 @@ class AttendanceRequestController extends Controller
     }
 
     /**
-     * 勤怠申請一覧画面を表示
+     * 勤怠修正申請一覧画面（承認待ち）を表示
      * @route GET /employee/attendance/request/list/pending
      * @return \Illuminate\View\View
      */
     public function attendanceRequestListPending()
     {
-
         $employee = Auth::guard('employee')->user();
 
         // AttendanceRequestStatusモデルでステータスを定数化。attendance_request_statusesテーブルから「承認待ち」のidを取得
@@ -88,6 +87,49 @@ class AttendanceRequestController extends Controller
             ->get();
 
         return view('attendance.employee.attendance-request-list-pending', compact('attendanceRequests', 'employee'));
+    }
+
+    /**
+     * 勤怠修正申請一覧画面（承認済み）を表示
+     * @route GET /employee/attendance/request/list/approved
+     * @return \Illuminate\View\View
+     */
+    public function attendanceRequestListApproved()
+    {
+        // ログイン中の従業員を取得
+        $employee = Auth::guard('employee')->user();
+
+        // AttendanceRequestStatusモデルでステータスを定数化。attendance_request_statusesテーブルから「承認済み」のidを取得
+        $approvedStatus = AttendanceRequestStatus::where('request_status', AttendanceRequestStatus::STATUS_APPROVED)->first()->id;
+
+        //  // ログイン中の従業員の承認済み申請を取得
+        $attendanceRequests = AttendanceRequest::where('attendance_request_status_id', $approvedStatus)
+            ->whereHas('attendance', function ($query) use ($employee) {
+                $query->where('employee_id', $employee->id);
+            })
+            ->with(['attendance', 'attendance.employee', 'attendanceRequestStatus'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('attendance.employee.attendance-request-list-approved', compact('attendanceRequests', 'employee'));
+    }
+
+    /**
+     * 修正申請詳細画面を表示
+     *
+     * @route GET /employee/attendance/request/{attendanceRequestId}/show
+     * @return \Illuminate\View\View
+     */
+    public function attendanceRequestShow($attendanceRequestId)
+    {
+        // リクエストされたattendance_request_idのレコードを取得
+        $attendanceRequest = AttendanceRequest::with('attendanceRequestBreaks')
+            ->findOrFail($attendanceRequestId);
+
+        // AttendanceRequestStatusモデルでステータスを定数化。attendance_request_statusesテーブルから「承認待ち」のidを取得
+        $pendingStatusId = AttendanceRequestStatus::where('request_status', AttendanceRequestStatus::STATUS_PENDING_APPROVAL)->value('id');
+
+        return view('attendance.employee.attendance-request-show', compact(['attendanceRequest', 'pendingStatusId']));
     }
 
     /**
