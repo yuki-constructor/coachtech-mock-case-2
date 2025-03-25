@@ -19,7 +19,7 @@
                         <button class="form-group__submit-btn">出勤</button>
                     </form>
                 @elseif ($attendance->status->status === '勤務中')
-                    <p class="work-status">勤務中</p>
+                    <p class="work-status">出勤中</p>
                     <p class="date" id="current-date"></p>
                     <p class="time" id="current-time"></p>
                     <div class="form-group__submit-btn--container">
